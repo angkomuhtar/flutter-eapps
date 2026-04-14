@@ -1,0 +1,49 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "flutter_eapps",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "flutter_eapps (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "flutter_eapps (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "Iphone 17 pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "46AB18AF-B869-4512-B894-735B9A86AA9B"
+    },
+    {
+      "name": "Pixel 8",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554"
+    },
+    {
+      "name": "Physical Device",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "RRCY202Z6AN"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "All Devices",
+      "configurations": ["Iphone 17 pro", "Pixel 8"]
+    }
+  ]
+}

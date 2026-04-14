@@ -31,4 +31,6 @@ class AppColors {
   static const Color transparent = Colors.transparent;
 
   static const Color scaffoldBackground = Color(0xFFF6F6F6);
+
+  static const Color grey = Color(0xFF6C757D);
 }

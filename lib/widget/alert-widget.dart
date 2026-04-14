@@ -27,6 +27,9 @@ class AlertWidget {
       case 'warning':
         lottiePath ??= 'assets/lottie/warning.json';
         break;
+      case 'fatal':
+        lottiePath ??= 'assets/lottie/robot.json';
+        break;
       default:
         lottiePath ??= 'assets/lottie/warning.json';
     }
