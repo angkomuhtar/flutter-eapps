@@ -9,7 +9,9 @@ class DropdownWidget<T> extends StatelessWidget {
   final IconData? prefixIcon;
   final String? Function(T?)? validator;
   final void Function(T?)? onChanged;
+  final void Function(T?)? onSaved;
   final String Function(T)? itemLabel;
+  final double? menuMaxHeight;
 
   const DropdownWidget({
     super.key,
@@ -20,14 +22,19 @@ class DropdownWidget<T> extends StatelessWidget {
     this.prefixIcon,
     this.validator,
     this.onChanged,
+    this.onSaved,
     this.itemLabel,
+    this.menuMaxHeight = 300,
   });
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<T>(
       value: items.contains(value) ? value : null,
+      menuMaxHeight: menuMaxHeight,
       decoration: InputDecoration(
+        fillColor: AppColors.white,
+        filled: true,
         labelText: labelText,
         hintText: hintText,
         border: const OutlineInputBorder(
@@ -43,6 +50,7 @@ class DropdownWidget<T> extends StatelessWidget {
         );
       }).toList(),
       onChanged: onChanged,
+      onSaved: onSaved,
       validator: validator,
     );
   }

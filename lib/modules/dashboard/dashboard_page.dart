@@ -121,17 +121,17 @@ class AllFeatureWidget extends StatelessWidget {
                 FeatureButton(
                   title: "Penangan Bahaya",
                   icon: "assets/features/hazard-action.png",
-                  onTap: () => {print("Penangan Bahaya")},
-                ),
-                FeatureButton(
-                  title: "Pengajuan Cuti",
-                  icon: "assets/features/leave.png",
-                  onTap: () => {print("Pengajuan Cuti")},
+                  onTap: () => context.push('/hazard-action'),
                 ),
                 FeatureButton(
                   title: "Kartu Inspeksi",
                   icon: "assets/features/inspection.png",
-                  onTap: () => {print("Kartu Inspeksi")},
+                  onTap: () => {context.push('/inspection')},
+                ),
+                FeatureButton(
+                  title: "Pengajuan Cuti",
+                  icon: "assets/features/leave.png",
+                  onTap: () => {context.push('/leave')},
                 ),
                 FeatureButton(
                   title: "Kontrak Kerja",

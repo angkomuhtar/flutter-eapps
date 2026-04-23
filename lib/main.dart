@@ -41,7 +41,7 @@ class MyApp extends ConsumerWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        fontFamily: GoogleFonts.dmSans().fontFamily,
+        textTheme: GoogleFonts.dmSansTextTheme(),
         useMaterial3: true,
         scaffoldBackgroundColor: AppColors.scaffoldBackground,
       ),

@@ -1,17 +1,18 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
 import 'package:flutter_eapps/core/dio/dio_provider.dart';
 import 'package:flutter_eapps/core/models/hazard_model.dart';
 import 'package:flutter_eapps/core/utils/app.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'hazard_provider.g.dart';
+part 'hazard_action_provider.g.dart';
 
 @riverpod
-class ListHazard extends _$ListHazard {
+class ListHazardAction extends _$ListHazardAction {
   late Dio _dio;
 
   int _page = 1;
@@ -20,8 +21,9 @@ class ListHazard extends _$ListHazard {
   final List<HazardItemModel> _items = [];
 
   @override
-  Future<List<HazardItemModel>> build() async {
+  Future<List<HazardItemModel>> build({String filter = ""}) async {
     _dio = ref.read(dioProvider(ApiType.empapps));
+    _filter = filter;
     return _fetch(reset: true);
   }
 
@@ -35,7 +37,7 @@ class ListHazard extends _$ListHazard {
     if (!_hasMore) return _items;
     try {
       final res = await _dio.get(
-        '/hazard',
+        '/hazard/action',
         queryParameters: {'page': _page, 'status': _filter},
       );
 
@@ -53,12 +55,11 @@ class ListHazard extends _$ListHazard {
       _hasMore = currentPage < lastPage;
 
       if (_hasMore) _page++;
-
       return _items;
     } catch (e) {
-      debugPrint('Error fetching hazards: $e');
-      return [];
+      debugPrint('Error fetching hazard actions: $e');
     }
+    return _items;
   }
 
   Future<void> loadMore() async {
@@ -70,8 +71,6 @@ class ListHazard extends _$ListHazard {
   }
 
   bool get hasMore => _hasMore;
-  String get filter => _filter;
-
   Future<void> refresh() async {
     state = const AsyncLoading();
 
@@ -79,15 +78,10 @@ class ListHazard extends _$ListHazard {
       return await _fetch(reset: true);
     });
   }
-
-  Future<void> setFilter(String filter) async {
-    _filter = filter;
-    await refresh();
-  }
 }
 
 @riverpod
-class UploadHazard extends _$UploadHazard {
+class UpdateAction extends _$UpdateAction {
   late final Dio _dio;
 
   @override
@@ -97,19 +91,19 @@ class UploadHazard extends _$UploadHazard {
 
   Future<(bool, String?)> upload(Map<String, dynamic> data) async {
     try {
-      final image = data['report_attachment'] as File;
+      final image = data['action_attachment'] as File;
       final fileName = image.path.split('/').last;
       final formData = FormData.fromMap({
         ...data,
-        'report_attachment': await MultipartFile.fromFile(
+        'action_attachment': await MultipartFile.fromFile(
           image.path,
           filename: fileName,
         ),
       });
 
-      await _dio.post('/hazard', data: formData);
+      await _dio.post('/hazard/action', data: formData);
 
-      ref.read(listHazardProvider.notifier).refresh();
+      ref.read(listHazardActionProvider().notifier).refresh();
       return (true, null);
     } catch (e) {
       String errorMessage = 'Terjadi kesalahan';
@@ -124,7 +118,7 @@ class UploadHazard extends _$UploadHazard {
 }
 
 @riverpod
-class DetailHazard extends _$DetailHazard {
+class DetailHazardAction extends _$DetailHazardAction {
   late Dio _dio;
 
   @override
@@ -136,8 +130,9 @@ class DetailHazard extends _$DetailHazard {
   Future<HazardModel> _fetch({required String id}) async {
     try {
       final res = await _dio.get('/hazard/$id');
-
       final data = res.data['data'];
+
+      debugPrint('Fetched hazard details: ${data['hazard_action']}');
       final item = HazardModel.fromJson(data);
       return item;
     } catch (e) {

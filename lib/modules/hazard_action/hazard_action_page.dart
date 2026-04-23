@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
-import 'package:flutter_eapps/modules/sleep_duration/sleep_duration_history_screen.dart';
-import 'package:flutter_eapps/modules/sleep_duration/sleep_duration_screen.dart';
+import 'package:flutter_eapps/modules/hazard_action/hazard_action_history_screen.dart';
+import 'package:flutter_eapps/modules/hazard_action/hazard_action_screen.dart';
 import 'package:flutter_eapps/widget/appbar-widget.dart';
-import 'package:flutter_eapps/widget/cust-tabbar-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_eapps/widget/cust-tabbar-widget.dart';
 
-class SleepDurationPage extends ConsumerStatefulWidget {
-  const SleepDurationPage({super.key});
+class HazardActionPage extends ConsumerStatefulWidget {
+  const HazardActionPage({super.key});
 
   @override
-  ConsumerState<SleepDurationPage> createState() => _SleepDurationPage();
+  ConsumerState<HazardActionPage> createState() => _HazardActionPageState();
 }
 
-class _SleepDurationPage extends ConsumerState<SleepDurationPage>
+class _HazardActionPageState extends ConsumerState<HazardActionPage>
     with SingleTickerProviderStateMixin {
-  int _selectedIndex = 0;
   late final TabController _tabController;
-
+  int _selectedIndex = 0;
   final List<Widget> _tabs = const [
-    SleepDurationScreen(),
-    SleepDurationHistoryScreen(),
+    HazardActionScreen(),
+    HazardActionHistoryScreen(),
   ];
 
   @override
@@ -46,19 +45,19 @@ class _SleepDurationPage extends ConsumerState<SleepDurationPage>
         bottom: false,
         child: Column(
           children: [
-            CustAppBar(title: 'Durasi Tidur'),
+            CustAppBar(title: 'Penanganan Bahaya'),
             CustTabBar(
               selectedIndex: _selectedIndex,
               tabs: [
                 Tabs(
-                  text: "Tambah Data",
-                  icon: Icons.bedtime_rounded,
+                  text: 'Laporan Baru',
+                  icon: Icons.report,
                   onTap: () {
                     _tabController.animateTo(0);
                   },
                 ),
                 Tabs(
-                  text: "History",
+                  text: 'Selesai',
                   icon: Icons.history,
                   onTap: () {
                     _tabController.animateTo(1);

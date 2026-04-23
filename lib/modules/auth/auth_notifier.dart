@@ -78,7 +78,24 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
   }
 }
 
-final currentUserProvider = FutureProvider<UserModel?>((ref) async {
-  await Future.delayed(const Duration(milliseconds: 150));
-  return ref.watch(authRepositoryProvider).getUser();
-});
+final currentUserProvider = AsyncNotifierProvider<CurrentUserNotifier, UserModel?>(
+  CurrentUserNotifier.new,
+);
+
+class CurrentUserNotifier extends AsyncNotifier<UserModel?> {
+  @override
+  Future<UserModel?> build() async {
+    final authState = await ref.watch(authNotifierProvider.future);
+    if (authState.status != AuthStatus.authenticated) {
+      return null;
+    }
+    return ref.read(authRepositoryProvider).getUser();
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      return ref.read(authRepositoryProvider).getUser();
+    });
+  }
+}

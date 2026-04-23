@@ -249,7 +249,7 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
     final radiusAsync = ref.watch(allowedRadiusProvider);
     final shiftAsync = ref.watch(listShiftProvider);
 
-    final radiusList = radiusAsync.value ?? [];
+    final radiusList = radiusAsync.valueOrNull ?? [];
     if (_currentPosition != null && radiusList.isNotEmpty) {
       _isWithinRadius = _checkIfWithinRadius(_currentPosition!, radiusList);
     }
@@ -263,8 +263,8 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
       }
     });
 
-    final today = todayAsync.value;
-    final shiftList = shiftAsync.value ?? [];
+    final today = todayAsync.valueOrNull ?? null;
+    final shiftList = shiftAsync.valueOrNull ?? [];
 
     final hasClockIn = today?.check_in != null;
     final hasClockOut = today?.check_out != null;

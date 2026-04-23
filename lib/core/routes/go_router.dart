@@ -3,8 +3,14 @@ import 'package:flutter_eapps/modules/attendance/attendance_history_screen.dart'
 import 'package:flutter_eapps/modules/attendance/attendance_page.dart';
 import 'package:flutter_eapps/modules/auth/login_screen.dart';
 import 'package:flutter_eapps/modules/dashboard/dashboard_page.dart';
+import 'package:flutter_eapps/modules/hazard/hazard_details_screen.dart';
 import 'package:flutter_eapps/modules/hazard/hazard_page.dart';
+import 'package:flutter_eapps/modules/hazard_action/hazard_action_details_screen.dart';
+import 'package:flutter_eapps/modules/hazard_action/hazard_action_page.dart';
 import 'package:flutter_eapps/modules/home/presentation/home_screen.dart';
+import 'package:flutter_eapps/modules/inspection/hazard_page.dart';
+import 'package:flutter_eapps/modules/leave/leave_details_screen.dart';
+import 'package:flutter_eapps/modules/leave/leave_page.dart';
 import 'package:flutter_eapps/modules/notification/notification_page.dart';
 import 'package:flutter_eapps/modules/profile/presentation/profile_page.dart';
 import 'package:flutter_eapps/modules/sleep_duration/sleep_duration_page.dart';
@@ -87,6 +93,39 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/hazard',
         name: 'hazard',
         builder: (context, state) => const HazardPage(),
+      ),
+      GoRoute(
+        path: '/hazard/details/:id',
+        name: 'hazard-details',
+        builder: (context, state) =>
+            HazardDetailsScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/hazard-action',
+        name: 'hazard-action',
+        builder: (context, state) => const HazardActionPage(),
+      ),
+      GoRoute(
+        path: '/hazard-action/details/:id',
+        name: 'hazard-action-details',
+        builder: (context, state) =>
+            HazardActionDetailsScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/inspection',
+        name: 'inspection',
+        builder: (context, state) => const InspectionPage(),
+      ),
+      GoRoute(
+        path: '/leave',
+        name: 'leave',
+        builder: (context, state) => const LeavePage(),
+      ),
+      GoRoute(
+        path: '/leave/details/:id',
+        name: 'leave-details',
+        builder: (context, state) =>
+            LeaveDetailsScreen(id: state.pathParameters['id']!),
       ),
     ],
     errorBuilder: (context, state) =>

@@ -35,22 +35,7 @@ class _SleepDurationHistoryScreenState
         data: (data) {
           if (data.isEmpty) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Lottie.asset('assets/lottie/empty.json', width: 200),
-                  Gap(16),
-                  Text(
-                    'Durasi Tidur Hari Ini Telah Tercatat',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.secondaryLight,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
+              child: EmptyList(message: 'Belum ada data durasi tidur'),
             );
           }
 
@@ -95,8 +80,8 @@ class _SleepDurationHistoryScreenState
             ),
           );
         },
-        loading: () => LoadingList(),
-        error: (e, st) => ErrorList(),
+        loading: () => Center(child: LoadingList()),
+        error: (e, st) => Center(child: ErrorList()),
       ),
     );
   }

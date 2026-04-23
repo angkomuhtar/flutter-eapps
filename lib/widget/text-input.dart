@@ -7,8 +7,15 @@ class InputText extends StatelessWidget {
   final TextInputType? keyboardType;
   final IconData? prefixIcon;
   final String? Function(String?)? validator;
+  final void Function(String?)? onSaved;
   final bool obscureText;
   final Widget? suffixIcon;
+  final int? maxLines;
+  final int? minLines;
+  final bool readOnly;
+  final bool disable;
+  final VoidCallback? onTap;
+  final String? initialValue;
 
   const InputText({
     super.key,
@@ -17,8 +24,15 @@ class InputText extends StatelessWidget {
     this.keyboardType,
     this.prefixIcon,
     this.validator,
+    this.onSaved,
     this.obscureText = false,
     this.suffixIcon,
+    this.maxLines = 1,
+    this.minLines,
+    this.readOnly = false,
+    this.disable = false,
+    this.onTap,
+    this.initialValue,
   });
 
   @override
@@ -27,16 +41,26 @@ class InputText extends StatelessWidget {
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
+      maxLines: maxLines,
+      minLines: minLines,
+      initialValue: initialValue,
+      readOnly: readOnly,
+      enabled: !disable,
+      onTap: onTap,
       decoration: InputDecoration(
         labelText: labelText,
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           borderSide: BorderSide(color: AppColors.primary),
         ),
+        fillColor: AppColors.white,
+        filled: true,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         suffixIcon: suffixIcon,
+        alignLabelWithHint: maxLines != 1,
       ),
       validator: validator,
+      onSaved: onSaved,
     );
   }
 }

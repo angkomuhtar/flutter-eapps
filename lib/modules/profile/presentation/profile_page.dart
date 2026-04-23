@@ -39,6 +39,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   Widget _buildHeader() {
+    final userAsync = ref.watch(currentUserProvider);
     return Container(
       padding: const EdgeInsets.only(top: 60, bottom: 30, left: 16, right: 16),
       decoration: BoxDecoration(
@@ -79,20 +80,66 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
           ),
           Gap(12),
-          Text(
-            'User Name',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.white,
+          userAsync.when(
+            data: (user) => Column(
+              children: [
+                Text(
+                  user?.name ?? 'User Name',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.white,
+                  ),
+                ),
+                Text(
+                  user != null ? '${user.employee?.divisi} - ${user.employee?.jabatan}' : 'Department - Position',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.scaffoldBackground,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Text(
-            'Department - Position',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: AppColors.scaffoldBackground,
+            loading: () => Column(
+              children: [
+                Text(
+                  'Loading...',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.white,
+                  ),
+                ),
+                Text(
+                  'Department - Position',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.scaffoldBackground,
+                  ),
+                ),
+              ],
+            ),
+            error: (_, __) => Column(
+              children: [
+                Text(
+                  'User Name',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.white,
+                  ),
+                ),
+                Text(
+                  'Department - Position',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.scaffoldBackground,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

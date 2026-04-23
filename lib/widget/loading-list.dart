@@ -28,22 +28,26 @@ class LoadingList extends StatelessWidget {
 }
 
 class EmptyList extends StatelessWidget {
-  const EmptyList({super.key});
+  final String? message;
+  const EmptyList({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 250,
       padding: const EdgeInsets.symmetric(vertical: 150),
       child: Column(
         children: [
           Lottie.asset('assets/lottie/empty.json', width: 200),
           Gap(16),
           Text(
-            'Tidak ada data',
+            message ?? 'Tidak ada data',
+            maxLines: 2,
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 14,
               color: AppColors.secondaryLight,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],
