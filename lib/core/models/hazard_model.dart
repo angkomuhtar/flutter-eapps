@@ -142,7 +142,7 @@ class Division {
     return Division(
       id: json['id'],
       name: json['division'],
-      code: json['acronim'],
+      code: json['acronim'] ?? '-',
     );
   }
 }

@@ -139,6 +139,11 @@ class AllFeatureWidget extends StatelessWidget {
                   icon: "assets/features/pkwt.png",
                 ),
                 FeatureButton(
+                  title: "Daily Activity",
+                  icon: "assets/features/daily-activity.png",
+                  onTap: () => {print("Daily Activity")},
+                ),
+                FeatureButton(
                   title: "P2H",
                   icon: "assets/features/p2h.png",
                   onTap: () => {print("P2H")},

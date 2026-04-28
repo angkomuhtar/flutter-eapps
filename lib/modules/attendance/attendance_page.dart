@@ -269,9 +269,9 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
     final hasClockIn = today?.check_in != null;
     final hasClockOut = today?.check_out != null;
 
-    debugPrint(
-      'Today attendance: ${today?.shift?.name}, check_in: ${today?.check_in}, check_out: ${today?.check_out}',
-    );
+    // debugPrint(
+    //   'Today attendance: ${today?.shift?.name}, check_in: ${today?.check_in}, check_out: ${today?.check_out}',
+    // );
 
     return Scaffold(
       body: _isLoading || radiusAsync.isLoading

@@ -8,11 +8,17 @@ import 'package:flutter_eapps/modules/hazard/hazard_page.dart';
 import 'package:flutter_eapps/modules/hazard_action/hazard_action_details_screen.dart';
 import 'package:flutter_eapps/modules/hazard_action/hazard_action_page.dart';
 import 'package:flutter_eapps/modules/home/presentation/home_screen.dart';
-import 'package:flutter_eapps/modules/inspection/hazard_page.dart';
+import 'package:flutter_eapps/modules/inspection/inspection_details_screen.dart';
+import 'package:flutter_eapps/modules/inspection/inspection_form_screen.dart';
+import 'package:flutter_eapps/modules/inspection/inspection_page.dart';
 import 'package:flutter_eapps/modules/leave/leave_details_screen.dart';
 import 'package:flutter_eapps/modules/leave/leave_page.dart';
 import 'package:flutter_eapps/modules/notification/notification_page.dart';
+import 'package:flutter_eapps/modules/profile/presentation/about_us_page.dart';
+import 'package:flutter_eapps/modules/profile/presentation/faq_page.dart';
+import 'package:flutter_eapps/modules/profile/presentation/privacy_policy_page.dart';
 import 'package:flutter_eapps/modules/profile/presentation/profile_page.dart';
+import 'package:flutter_eapps/modules/profile/presentation/terms_condition_page.dart';
 import 'package:flutter_eapps/modules/sleep_duration/sleep_duration_page.dart';
 import 'package:flutter_eapps/modules/auth/auth_notifier.dart';
 import 'package:flutter_eapps/modules/auth/auth_state.dart';
@@ -117,6 +123,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const InspectionPage(),
       ),
       GoRoute(
+        path: '/inspection/:slug/form',
+        name: 'inspection-form',
+        builder: (context, state) =>
+            InspectionFormScreen(slug: state.pathParameters['slug']!),
+      ),
+      GoRoute(
+        path: '/inspection/:id/details',
+        name: 'inspection-details',
+        builder: (context, state) =>
+            InspectionDetailsScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
         path: '/leave',
         name: 'leave',
         builder: (context, state) => const LeavePage(),
@@ -126,6 +144,26 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: 'leave-details',
         builder: (context, state) =>
             LeaveDetailsScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/terms-condition',
+        name: 'terms-condition',
+        builder: (context, state) => const TermsConditionPage(),
+      ),
+      GoRoute(
+        path: '/privacy-policy',
+        name: 'privacy-policy',
+        builder: (context, state) => const PrivacyPolicyPage(),
+      ),
+      GoRoute(
+        path: '/about-us',
+        name: 'about-us',
+        builder: (context, state) => const AboutUsPage(),
+      ),
+      GoRoute(
+        path: '/faq',
+        name: 'faq',
+        builder: (context, state) => const FaqPage(),
       ),
     ],
     errorBuilder: (context, state) =>

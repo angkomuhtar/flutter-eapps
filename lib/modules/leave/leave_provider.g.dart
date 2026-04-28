@@ -25,7 +25,7 @@ final leaveHistoryProvider =
     );
 
 typedef _$LeaveHistory = AutoDisposeAsyncNotifier<List<ListLeaveModel>>;
-String _$uploadLeaveHash() => r'35e6847e6d57117dc38ae70bd9b325d066de961d';
+String _$uploadLeaveHash() => r'373e5ade59fa9958fa866211bc32ce68965903f5';
 
 /// See also [UploadLeave].
 @ProviderFor(UploadLeave)
@@ -41,7 +41,7 @@ final uploadLeaveProvider =
     );
 
 typedef _$UploadLeave = AutoDisposeAsyncNotifier<void>;
-String _$detailLeaveHash() => r'833e770ed78bcc6f79ff00433ef1807bbfce7ac7';
+String _$detailLeaveHash() => r'a193d2a846e1ae322fcabf10871c24cec9752fd1';
 
 /// Copied from Dart SDK
 class _SystemHash {

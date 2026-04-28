@@ -7,7 +7,6 @@ import 'package:flutter_eapps/widget/loading-list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 
 class HazardActionHistoryScreen extends ConsumerStatefulWidget {
   const HazardActionHistoryScreen({super.key});
@@ -40,12 +39,17 @@ class _HazardActionHistoryScreenState
 
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 100) {
-      _hasMore = ref.read(listHazardProvider.notifier).hasMore;
+      _hasMore = ref
+          .read(listHazardActionProvider(filter: 'closed').notifier)
+          .hasMore;
       if (!_hasMore) return;
       _isLoadingMore = true;
-      ref.read(listHazardProvider.notifier).loadMore().then((_) {
-        _isLoadingMore = false;
-      });
+      ref
+          .read(listHazardActionProvider(filter: 'closed').notifier)
+          .loadMore()
+          .then((_) {
+            _isLoadingMore = false;
+          });
     }
   }
 

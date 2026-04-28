@@ -44,6 +44,7 @@ class ListHazardAction extends _$ListHazardAction {
       final data = res.data['data'];
 
       final List list = data['data'];
+      debugPrint(list[1].toString());
 
       final newItems = list.map((e) => HazardItemModel.fromJson(e)).toList();
 
@@ -58,8 +59,8 @@ class ListHazardAction extends _$ListHazardAction {
       return _items;
     } catch (e) {
       debugPrint('Error fetching hazard actions: $e');
+      rethrow;
     }
-    return _items;
   }
 
   Future<void> loadMore() async {

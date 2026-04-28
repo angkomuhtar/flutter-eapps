@@ -146,7 +146,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Text(
-                            'LOGIN',
+                            'MASUK',
                             style: TextStyle(color: Colors.white),
                           ),
                   ),

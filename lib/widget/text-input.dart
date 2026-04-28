@@ -47,8 +47,13 @@ class InputText extends StatelessWidget {
       readOnly: readOnly,
       enabled: !disable,
       onTap: onTap,
+      style: TextStyle(
+        color: disable ? AppColors.grey : AppColors.black,
+        fontSize: 14,
+      ),
       decoration: InputDecoration(
         labelText: labelText,
+        labelStyle: TextStyle(fontSize: 14),
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
           borderSide: BorderSide(color: AppColors.primary),

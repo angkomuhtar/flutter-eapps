@@ -5,27 +5,28 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
 import 'package:flutter_eapps/core/dio/dio_provider.dart';
 import 'package:flutter_eapps/core/models/hazard_model.dart';
+import 'package:flutter_eapps/core/models/inspection_model.dart';
 import 'package:flutter_eapps/core/utils/app.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'hazard_provider.g.dart';
+part 'inspection_provider.g.dart';
 
 @riverpod
-class ListHazard extends _$ListHazard {
+class InspectionHistory extends _$InspectionHistory {
   late Dio _dio;
 
   int _page = 1;
   String _filter = "";
   bool _hasMore = true;
-  final List<HazardItemModel> _items = [];
+  final List<InspectionListModel> _items = [];
 
   @override
-  Future<List<HazardItemModel>> build() async {
+  Future<List<InspectionListModel>> build() async {
     _dio = ref.read(dioProvider(ApiType.empapps));
     return _fetch(reset: true);
   }
 
-  Future<List<HazardItemModel>> _fetch({bool reset = false}) async {
+  Future<List<InspectionListModel>> _fetch({bool reset = false}) async {
     if (reset) {
       _page = 1;
       _hasMore = true;
@@ -35,15 +36,18 @@ class ListHazard extends _$ListHazard {
     if (!_hasMore) return _items;
     try {
       final res = await _dio.get(
-        '/hazard',
+        '/inspection/history',
         queryParameters: {'page': _page, 'status': _filter},
       );
 
       final data = res.data['data'];
 
+      debugPrint(data.toString());
       final List list = data['data'];
 
-      final newItems = list.map((e) => HazardItemModel.fromJson(e)).toList();
+      final newItems = list
+          .map((e) => InspectionListModel.fromJson(e))
+          .toList();
 
       _items.addAll(newItems);
 
@@ -57,7 +61,7 @@ class ListHazard extends _$ListHazard {
       return _items;
     } catch (e) {
       debugPrint('Error fetching hazards: $e');
-      return [];
+      rethrow;
     }
   }
 
@@ -87,7 +91,53 @@ class ListHazard extends _$ListHazard {
 }
 
 @riverpod
-class UploadHazard extends _$UploadHazard {
+class GetInspection extends _$GetInspection {
+  late final Dio _dio;
+
+  @override
+  FutureOr<List<InspectionQuestion>> build({required String slug}) async {
+    _dio = ref.read(dioProvider(ApiType.empapps));
+
+    try {
+      final res = await _dio.get('/inspection/${slug}/question');
+      List data = res.data['data'];
+      final item = data.map((e) {
+        debugPrint(e.toString());
+        return InspectionQuestion.fromJson(e);
+      }).toList();
+      return item;
+    } catch (e) {
+      debugPrint('Error fetching list question: $e');
+      rethrow;
+    }
+  }
+}
+
+@riverpod
+class GetInspectionType extends _$GetInspectionType {
+  late final Dio _dio;
+
+  @override
+  FutureOr<List<InspectionType>> build() async {
+    _dio = ref.read(dioProvider(ApiType.empapps));
+
+    try {
+      final res = await _dio.get('/inspection/type');
+      List data = res.data['data'];
+      final item = data.map((e) {
+        debugPrint(e.toString());
+        return InspectionType.fromJson(e);
+      }).toList();
+      return item;
+    } catch (e) {
+      debugPrint('Error fetching list question: $e');
+      rethrow;
+    }
+  }
+}
+
+@riverpod
+class UploadInspection extends _$UploadInspection {
   late final Dio _dio;
 
   @override
@@ -97,19 +147,8 @@ class UploadHazard extends _$UploadHazard {
 
   Future<(bool, String?)> upload(Map<String, dynamic> data) async {
     try {
-      final image = data['report_attachment'] as File;
-      final fileName = image.path.split('/').last;
-      final formData = FormData.fromMap({
-        ...data,
-        'report_attachment': await MultipartFile.fromFile(
-          image.path,
-          filename: fileName,
-        ),
-      });
-
-      await _dio.post('/hazard', data: formData);
-
-      ref.read(listHazardProvider.notifier).refresh();
+      await _dio.post('/inspection', data: data);
+      ref.read(inspectionHistoryProvider.notifier).refresh();
       return (true, null);
     } catch (e) {
       String errorMessage = 'Terjadi kesalahan';
@@ -124,25 +163,25 @@ class UploadHazard extends _$UploadHazard {
 }
 
 @riverpod
-class DetailHazard extends _$DetailHazard {
+class DetailInspection extends _$DetailInspection {
   late Dio _dio;
 
   @override
-  Future<HazardModel> build({required String id}) async {
+  Future<InspectionDetail> build({required String id}) async {
     _dio = ref.read(dioProvider(ApiType.empapps));
     return _fetch(id: id);
   }
 
-  Future<HazardModel> _fetch({required String id}) async {
+  Future<InspectionDetail> _fetch({required String id}) async {
     try {
-      final res = await _dio.get('/hazard/$id');
+      final res = await _dio.get('/inspection/$id/detail');
 
       final data = res.data['data'];
-      final item = HazardModel.fromJson(data);
+      final item = InspectionDetail.fromJson(data);
       return item;
     } catch (e) {
-      debugPrint('Error fetching hazard details: $e');
-      throw Exception('Failed to load hazard details: $e');
+      debugPrint('Error fetching inspection details: $e');
+      throw Exception('Failed to load inspection details: $e');
     }
   }
 }

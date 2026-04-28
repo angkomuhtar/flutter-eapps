@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
-import 'package:flutter_eapps/modules/hazard/hazard_provider.dart';
 import 'package:flutter_eapps/modules/hazard_action/hazard_action_provider.dart';
 import 'package:flutter_eapps/widget/hazard/hazard-card-widget.dart';
 import 'package:flutter_eapps/widget/loading-list.dart';
@@ -37,12 +36,17 @@ class _HazardActionScreenState extends ConsumerState<HazardActionScreen> {
 
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 100) {
-      _hasMore = ref.read(listHazardProvider.notifier).hasMore;
+      _hasMore = ref
+          .read(listHazardActionProvider(filter: 'onprogress').notifier)
+          .hasMore;
       if (!_hasMore) return;
       _isLoadingMore = true;
-      ref.read(listHazardProvider.notifier).loadMore().then((_) {
-        _isLoadingMore = false;
-      });
+      ref
+          .read(listHazardActionProvider(filter: 'onprogress').notifier)
+          .loadMore()
+          .then((_) {
+            _isLoadingMore = false;
+          });
     }
   }
 

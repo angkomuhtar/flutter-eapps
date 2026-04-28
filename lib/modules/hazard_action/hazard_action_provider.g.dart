@@ -6,7 +6,7 @@ part of 'hazard_action_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$listHazardActionHash() => r'eddc3adcd92fb90313851797bee4ec7e5d3fc9a7';
+String _$listHazardActionHash() => r'9035377093ba801913470f4dfc1ddf83f35cdefe';
 
 /// Copied from Dart SDK
 class _SystemHash {

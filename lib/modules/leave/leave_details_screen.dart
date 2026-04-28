@@ -29,7 +29,6 @@ class _LeaveDetailsScreenState extends ConsumerState<LeaveDetailsScreen> {
         child: Column(
           children: [
             CustAppBar(title: 'Detail Pengajuan Cuti'),
-            Gap(4),
             Expanded(
               child: detailAsync.when(
                 data: (data) {

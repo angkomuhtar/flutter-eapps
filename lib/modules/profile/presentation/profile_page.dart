@@ -4,6 +4,8 @@ import 'package:flutter_eapps/widget/alert-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
+import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -13,9 +15,19 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
+  String appVersion = '';
+
   @override
   void initState() {
     super.initState();
+    _loadPackageInfo();
+  }
+
+  Future<void> _loadPackageInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      appVersion = packageInfo.version;
+    });
   }
 
   @override
@@ -40,6 +52,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Widget _buildHeader() {
     final userAsync = ref.watch(currentUserProvider);
+
     return Container(
       padding: const EdgeInsets.only(top: 60, bottom: 30, left: 16, right: 16),
       decoration: BoxDecoration(
@@ -62,7 +75,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
               ),
               Text(
-                'V.3.0.0',
+                'v$appVersion',
                 style: TextStyle(
                   color: AppColors.white,
                   fontSize: 12,
@@ -92,12 +105,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ),
                 Text(
-                  user != null ? '${user.employee?.divisi} - ${user.employee?.jabatan}' : 'Department - Position',
+                  user != null
+                      ? '${user.employee?.divisi} - ${user.employee?.jabatan}'
+                      : 'Department - Position',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: AppColors.scaffoldBackground,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -168,17 +184,31 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             onTap: () {},
           ),
           _buildMenuItem(
-            icon: Icons.help_outline,
-            title: 'Bantuan',
+            icon: Icons.info_outline,
+            title: 'Tentang Aplikasi',
             onTap: () {
-              AlertWidget.show(
-                context: context,
-                type: 'success',
-                title: 'Peringatan',
-                description: 'Apakah Anda yakin?',
-                okText: 'Ya',
-                cancelText: 'Batal',
-              );
+              context.push('/about-us');
+            },
+          ),
+          _buildMenuItem(
+            icon: Icons.help_outline,
+            title: 'FAQ',
+            onTap: () {
+              context.push('/faq');
+            },
+          ),
+          _buildMenuItem(
+            icon: Icons.description_outlined,
+            title: 'Syarat dan Ketentuan',
+            onTap: () {
+              context.push('/terms-condition');
+            },
+          ),
+          _buildMenuItem(
+            icon: Icons.privacy_tip_outlined,
+            title: 'Kebijakan Privasi',
+            onTap: () {
+              context.push('/privacy-policy');
             },
           ),
           _buildMenuItem(
@@ -204,6 +234,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               }),
             },
           ),
+          Gap(200),
         ],
       ),
     );

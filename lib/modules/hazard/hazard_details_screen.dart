@@ -30,7 +30,6 @@ class _HazardDetailsScreenState extends ConsumerState<HazardDetailsScreen> {
         child: Column(
           children: [
             CustAppBar(title: 'Detail Laporan'),
-            Gap(4),
             Expanded(
               child: detailAsync.when(
                 data: (data) {
