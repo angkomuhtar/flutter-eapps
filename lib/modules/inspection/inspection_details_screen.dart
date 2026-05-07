@@ -1,12 +1,21 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
+import 'package:flutter_eapps/core/dio/dio_factory.dart';
+import 'package:flutter_eapps/core/dio/dio_provider.dart';
 import 'package:flutter_eapps/modules/inspection/inspection_provider.dart';
 import 'package:flutter_eapps/widget/appbar-widget.dart';
+import 'package:flutter_eapps/widget/loading-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_eapps/widget/loading-list.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_eapps/widget/hazard/hazard_widget.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class InspectionDetailsScreen extends ConsumerStatefulWidget {
   final String id;
@@ -20,6 +29,47 @@ class InspectionDetailsScreen extends ConsumerStatefulWidget {
 
 class _InspectionDetailsScreenState
     extends ConsumerState<InspectionDetailsScreen> {
+  Future<void> downloadFile(String url, String fileName) async {
+    LoadingWidget.show(context, message: 'Mengunduh file...');
+    try {
+      final permission =
+          Platform.isAndroid &&
+              (await DeviceInfoPlugin().androidInfo).version.sdkInt >= 33
+          ? Permission.manageExternalStorage
+          : Permission.storage;
+
+      if (await permission.request().isGranted) {
+        final dir = Platform.isAndroid
+            ? Directory('/storage/emulated/0/Download')
+            : await getApplicationDocumentsDirectory();
+        final filePath = '${dir.path}/$fileName';
+
+        await ref.read(dioProvider(ApiType.empapps)).download(url, filePath);
+
+        OpenFile.open(filePath);
+        print('File downloaded to: $filePath');
+      } else {
+        print('Storage permission denied');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Izin penyimpanan diperlukan untuk mengunduh file'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error downloading file: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal mengunduh file'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      LoadingWidget.hide(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final detailAsync = ref.watch(detailInspectionProvider(id: widget.id));
@@ -30,17 +80,31 @@ class _InspectionDetailsScreenState
         bottom: false,
         child: Column(
           children: [
-            CustAppBar(
-              title: 'Detail Inspeksi',
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.cloud_download_rounded,
-                  color: AppColors.black,
-                ),
-                onPressed: () {
-                  ref.invalidate(detailInspectionProvider(id: widget.id));
-                },
+            detailAsync.maybeWhen(
+              data: (data) => CustAppBar(
+                title: 'Detail Inspeksi',
+                trailing: data.status == "verified"
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: IconButton(
+                          onPressed: () {
+                            final fileUrl =
+                                '/inspection/${data.id}/export_pdf'; // Ganti dengan URL file yang ingin diunduh
+                            final fileName =
+                                'Inspeksi_${(data.inspection_number).replaceAll('/', '_')}.pdf'; // Ganti dengan nama file yang diinginkan
+
+                            downloadFile(fileUrl, fileName);
+                          },
+                          icon: Icon(
+                            Icons.cloud_download_rounded,
+                            color: AppColors.black,
+                            size: 20,
+                          ),
+                        ),
+                      )
+                    : null,
               ),
+              orElse: () => CustAppBar(title: 'Detail Inspeksi'),
             ),
             Expanded(
               child: detailAsync.when(

@@ -51,9 +51,6 @@ class _InspectionFormScreenState extends ConsumerState<InspectionFormScreen> {
         .upload(_formData);
 
     // if (!mounted) return;
-
-    debugPrint('Form Data: $success, $errorMessage');
-    debugPrint(_formData.toString());
     LoadingWidget.hide(context);
     if (success) {
       _formKey.currentState!.reset();

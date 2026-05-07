@@ -27,6 +27,8 @@ class itemValue extends StatelessWidget {
             Gap(4),
             Text(
               value!,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ],

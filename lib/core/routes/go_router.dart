@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eapps/core/models/contract_model.dart';
 import 'package:flutter_eapps/modules/attendance/attendance_history_screen.dart';
 import 'package:flutter_eapps/modules/attendance/attendance_page.dart';
 import 'package:flutter_eapps/modules/auth/login_screen.dart';
@@ -14,6 +15,8 @@ import 'package:flutter_eapps/modules/inspection/inspection_page.dart';
 import 'package:flutter_eapps/modules/leave/leave_details_screen.dart';
 import 'package:flutter_eapps/modules/leave/leave_page.dart';
 import 'package:flutter_eapps/modules/notification/notification_page.dart';
+import 'package:flutter_eapps/modules/pkwt/pkwt_details_screen.dart';
+import 'package:flutter_eapps/modules/pkwt/pkwt_page.dart';
 import 'package:flutter_eapps/modules/profile/presentation/about_us_page.dart';
 import 'package:flutter_eapps/modules/profile/presentation/faq_page.dart';
 import 'package:flutter_eapps/modules/profile/presentation/privacy_policy_page.dart';
@@ -22,6 +25,8 @@ import 'package:flutter_eapps/modules/profile/presentation/terms_condition_page.
 import 'package:flutter_eapps/modules/sleep_duration/sleep_duration_page.dart';
 import 'package:flutter_eapps/modules/auth/auth_notifier.dart';
 import 'package:flutter_eapps/modules/auth/auth_state.dart';
+import 'package:flutter_eapps/modules/sop/sop_details_screen.dart';
+import 'package:flutter_eapps/modules/sop/sop_page.dart';
 import 'package:flutter_eapps/modules/splash/splash_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -164,6 +169,32 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/faq',
         name: 'faq',
         builder: (context, state) => const FaqPage(),
+      ),
+      GoRoute(
+        path: '/contract',
+        name: 'contract',
+        builder: (context, state) => const PkwtPage(),
+      ),
+      GoRoute(
+        path: '/contract/details',
+        name: 'contract-details',
+        builder: (context, state) {
+          final item = state.extra as ContractModel;
+          return PkwtDetailsScreen(items: item);
+        },
+      ),
+      GoRoute(
+        path: '/sop',
+        name: 'sop',
+        builder: (context, state) => const SopPage(),
+      ),
+      GoRoute(
+        path: '/sop/:id',
+        name: 'sop-details',
+        builder: (context, state) => SopDetailsScreen(
+          id: state.pathParameters['id']!,
+          folder: state.extra as String,
+        ),
       ),
     ],
     errorBuilder: (context, state) =>

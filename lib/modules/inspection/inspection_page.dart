@@ -132,7 +132,7 @@ class _InspectionPage extends ConsumerState<InspectionPage>
                                   );
                                 },
                                 separatorBuilder: (context, index) =>
-                                    const Gap(8),
+                                    const Gap(2),
                                 itemCount: data.length,
                               );
                             },

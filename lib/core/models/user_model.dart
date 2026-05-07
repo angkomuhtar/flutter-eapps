@@ -8,6 +8,7 @@ class UserModel {
   final String roles;
   final String status;
   final EmployeeModel? employee;
+  final String? signature;
 
   UserModel({
     required this.id,
@@ -17,6 +18,7 @@ class UserModel {
     required this.roles,
     required this.status,
     this.employee,
+    this.signature,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,9 @@ class UserModel {
       status: json['status'],
       employee: json['employee'] != null
           ? EmployeeModel.fromJson(json['employee'])
+          : null,
+      signature: json['signature'] != null
+          ? json['signature']['file'] as String
           : null,
     );
   }

@@ -29,16 +29,16 @@ class CustAppBar extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           spacing: 10,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (showBackButton)
-              GestureDetector(
-                onTap: onBack ?? () => {context.pop()},
-                child: Icon(
+              IconButton(
+                onPressed: onBack ?? () => {context.pop()},
+                icon: Icon(
                   Icons.arrow_back_ios_new_rounded,
                   size: 20,
                   color: AppColors.black,

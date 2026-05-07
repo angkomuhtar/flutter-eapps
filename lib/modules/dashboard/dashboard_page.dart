@@ -106,47 +106,97 @@ class AllFeatureWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 10,
+              spacing: 16,
               children: [
-                FeatureButton(
-                  title: "Jam Tidur",
-                  icon: "assets/features/sleep-duration.png",
-                  onTap: () => context.push('/sleep-duration'),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FeatureButton(
+                      title: "Jam Tidur",
+                      icon: "assets/features/sleep-duration.png",
+                      onTap: () => context.push('/sleep-duration'),
+                    ),
+                    FeatureButton(
+                      title: "Laporan Bahaya",
+                      icon: "assets/features/hazard-report.png",
+                      onTap: () => context.push('/hazard'),
+                    ),
+                  ],
                 ),
-                FeatureButton(
-                  title: "Laporan Bahaya",
-                  icon: "assets/features/hazard-report.png",
-                  onTap: () => context.push('/hazard'),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FeatureButton(
+                      title: "Penangan Bahaya",
+                      icon: "assets/features/hazard-action.png",
+                      onTap: () => context.push('/hazard-action'),
+                    ),
+                    FeatureButton(
+                      title: "Kartu Inspeksi",
+                      icon: "assets/features/inspection.png",
+                      onTap: () => {context.push('/inspection')},
+                    ),
+                  ],
                 ),
-                FeatureButton(
-                  title: "Penangan Bahaya",
-                  icon: "assets/features/hazard-action.png",
-                  onTap: () => context.push('/hazard-action'),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FeatureButton(
+                      title: "Pengajuan Cuti",
+                      icon: "assets/features/leave.png",
+                      onTap: () => {context.push('/leave')},
+                    ),
+                    FeatureButton(
+                      title: "Kontrak Kerja",
+                      onTap: () => {context.push('/contract')},
+                      icon: "assets/features/pkwt.png",
+                    ),
+                  ],
                 ),
-                FeatureButton(
-                  title: "Kartu Inspeksi",
-                  icon: "assets/features/inspection.png",
-                  onTap: () => {context.push('/inspection')},
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FeatureButton(
+                      title: "Daily Activity",
+                      icon: "assets/features/daily-activity.png",
+                      onTap: () => {print("Daily Activity")},
+                    ),
+                    FeatureButton(
+                      title: "P2H",
+                      icon: "assets/features/p2h.png",
+                      onTap: () => {print("P2H")},
+                    ),
+                  ],
                 ),
-                FeatureButton(
-                  title: "Pengajuan Cuti",
-                  icon: "assets/features/leave.png",
-                  onTap: () => {context.push('/leave')},
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FeatureButton(
+                      title: "S.O.P",
+                      icon: "assets/features/sop.png",
+                      onTap: () => {context.push('/sop')},
+                    ),
+                    FeatureButton(
+                      title: "Surat Lembur",
+                      icon: "assets/features/overtime.png",
+                      onTap: () => {print("Surat Perintah Lembur")},
+                    ),
+                  ],
                 ),
-                FeatureButton(
-                  title: "Kontrak Kerja",
-                  onTap: () => {print("Kontrak Kerja")},
-                  icon: "assets/features/pkwt.png",
-                ),
-                FeatureButton(
-                  title: "Daily Activity",
-                  icon: "assets/features/daily-activity.png",
-                  onTap: () => {print("Daily Activity")},
-                ),
-                FeatureButton(
-                  title: "P2H",
-                  icon: "assets/features/p2h.png",
-                  onTap: () => {print("P2H")},
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FeatureButton(
+                      title: "Lupa Absen",
+                      icon: "assets/features/all-menu.png",
+                      onTap: () => {print("Lupa Absen")},
+                    ),
+                    FeatureButton(
+                      title: "Berita & Informasi",
+                      icon: "assets/features/all-menu.png",
+                      onTap: () => {print("Berita & Informasi")},
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -173,6 +223,7 @@ class FeatureButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 70,
+      height: 110,
       // decoration: BoxDecoration(
       //   color: AppColors.white,
       //   borderRadius: BorderRadius.circular(5),
@@ -186,7 +237,7 @@ class FeatureButton extends StatelessWidget {
       //   ],
       // ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
@@ -212,6 +263,8 @@ class FeatureButton extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,

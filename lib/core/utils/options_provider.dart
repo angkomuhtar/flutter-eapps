@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
 import 'package:flutter_eapps/core/dio/dio_provider.dart';
 import 'package:flutter_eapps/core/models/options_model.dart';
+import 'package:flutter_eapps/core/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'options_provider.g.dart';
@@ -89,5 +89,22 @@ class ListDepartement extends _$ListDepartement {
 
     final List list = data is List ? data : [];
     return list.map((e) => DepartementModel.fromJson(e)).toList();
+  }
+}
+
+@riverpod
+class UserLoginData extends _$UserLoginData {
+  late Dio _dio;
+  @override
+  Future<UserModel?> build() async {
+    _dio = ref.read(dioProvider(ApiType.empapps));
+    return _fetch();
+  }
+
+  Future<UserModel?> _fetch() async {
+    final res = await _dio.get('/me');
+    final data = res.data['user'];
+    if (data == null) return null;
+    return UserModel.fromJson(data);
   }
 }

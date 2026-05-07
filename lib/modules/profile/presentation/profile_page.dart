@@ -105,9 +105,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ),
                 Text(
-                  user != null
-                      ? '${user.employee?.divisi} - ${user.employee?.jabatan}'
-                      : 'Department - Position',
+                  user != null ? '${user.employee?.jabatan}' : 'Position',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.scaffoldBackground,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  user != null ? '${user.employee?.divisi}' : 'Department',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,

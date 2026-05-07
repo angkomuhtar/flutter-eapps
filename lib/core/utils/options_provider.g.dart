@@ -346,5 +346,21 @@ class _ListDepartementProviderElement
   String get companyId => (origin as ListDepartementProvider).companyId;
 }
 
+String _$userLoginDataHash() => r'3f097dd244ec2bce4a3ed614284278869a113456';
+
+/// See also [UserLoginData].
+@ProviderFor(UserLoginData)
+final userLoginDataProvider =
+    AutoDisposeAsyncNotifierProvider<UserLoginData, UserModel?>.internal(
+      UserLoginData.new,
+      name: r'userLoginDataProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$userLoginDataHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$UserLoginData = AutoDisposeAsyncNotifier<UserModel?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
