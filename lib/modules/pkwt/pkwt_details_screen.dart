@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
 import 'package:flutter_eapps/core/models/contract_model.dart';
+import 'package:flutter_eapps/core/utils/app.dart';
 import 'package:flutter_eapps/core/utils/options_provider.dart';
 import 'package:flutter_eapps/modules/pkwt/pkwt_page.dart';
 import 'package:flutter_eapps/modules/pkwt/pkwt_provider.dart';
@@ -18,7 +18,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_eapps/widget/hazard/hazard_widget.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:signature/signature.dart';
 
 class PkwtDetailsScreen extends ConsumerStatefulWidget {
@@ -103,25 +102,17 @@ class _PkwtDetailsScreenState extends ConsumerState<PkwtDetailsScreen> {
   }
 
   Future<void> downloadFile(String url, String fileName) async {
-    print(url);
     LoadingWidget.show(context, message: 'Mengunduh file...');
     try {
-      final permission =
-          Platform.isAndroid &&
-              (await DeviceInfoPlugin().androidInfo).version.sdkInt >= 33
-          ? Permission.manageExternalStorage
-          : Permission.storage;
+      final permission = await requestStoragePermission();
 
-      if (await permission.request().isGranted) {
+      if (permission) {
         final dir = Platform.isAndroid
-            ? Directory('/storage/emulated/0/Download')
+            ? await getDownloadsDirectory()
             : await getApplicationDocumentsDirectory();
-        final filePath = '${dir.path}/$fileName';
-
+        final filePath = '${dir?.path}/$fileName';
         await Dio().download(url, filePath);
-
         OpenFile.open(filePath);
-        print('File downloaded to: $filePath');
       } else {
         print('Storage permission denied');
         ScaffoldMessenger.of(context).showSnackBar(

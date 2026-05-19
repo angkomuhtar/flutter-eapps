@@ -371,5 +371,169 @@ class _DetailInspectionProviderElement
   String get id => (origin as DetailInspectionProvider).id;
 }
 
+String _$inspectionReportHistoryHash() =>
+    r'd125065dcd0d4bbf98bfc163d431cf3c61cbb5b5';
+
+abstract class _$InspectionReportHistory
+    extends BuildlessAutoDisposeAsyncNotifier<List<InspectionListModel>> {
+  late final String filter;
+
+  FutureOr<List<InspectionListModel>> build({String filter = ''});
+}
+
+/// See also [InspectionReportHistory].
+@ProviderFor(InspectionReportHistory)
+const inspectionReportHistoryProvider = InspectionReportHistoryFamily();
+
+/// See also [InspectionReportHistory].
+class InspectionReportHistoryFamily
+    extends Family<AsyncValue<List<InspectionListModel>>> {
+  /// See also [InspectionReportHistory].
+  const InspectionReportHistoryFamily();
+
+  /// See also [InspectionReportHistory].
+  InspectionReportHistoryProvider call({String filter = ''}) {
+    return InspectionReportHistoryProvider(filter: filter);
+  }
+
+  @override
+  InspectionReportHistoryProvider getProviderOverride(
+    covariant InspectionReportHistoryProvider provider,
+  ) {
+    return call(filter: provider.filter);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'inspectionReportHistoryProvider';
+}
+
+/// See also [InspectionReportHistory].
+class InspectionReportHistoryProvider
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          InspectionReportHistory,
+          List<InspectionListModel>
+        > {
+  /// See also [InspectionReportHistory].
+  InspectionReportHistoryProvider({String filter = ''})
+    : this._internal(
+        () => InspectionReportHistory()..filter = filter,
+        from: inspectionReportHistoryProvider,
+        name: r'inspectionReportHistoryProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$inspectionReportHistoryHash,
+        dependencies: InspectionReportHistoryFamily._dependencies,
+        allTransitiveDependencies:
+            InspectionReportHistoryFamily._allTransitiveDependencies,
+        filter: filter,
+      );
+
+  InspectionReportHistoryProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.filter,
+  }) : super.internal();
+
+  final String filter;
+
+  @override
+  FutureOr<List<InspectionListModel>> runNotifierBuild(
+    covariant InspectionReportHistory notifier,
+  ) {
+    return notifier.build(filter: filter);
+  }
+
+  @override
+  Override overrideWith(InspectionReportHistory Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: InspectionReportHistoryProvider._internal(
+        () => create()..filter = filter,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        filter: filter,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<
+    InspectionReportHistory,
+    List<InspectionListModel>
+  >
+  createElement() {
+    return _InspectionReportHistoryProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is InspectionReportHistoryProvider && other.filter == filter;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, filter.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin InspectionReportHistoryRef
+    on AutoDisposeAsyncNotifierProviderRef<List<InspectionListModel>> {
+  /// The parameter `filter` of this provider.
+  String get filter;
+}
+
+class _InspectionReportHistoryProviderElement
+    extends
+        AutoDisposeAsyncNotifierProviderElement<
+          InspectionReportHistory,
+          List<InspectionListModel>
+        >
+    with InspectionReportHistoryRef {
+  _InspectionReportHistoryProviderElement(super.provider);
+
+  @override
+  String get filter => (origin as InspectionReportHistoryProvider).filter;
+}
+
+String _$updateInspectionHash() => r'66b2a12be5cfb0e57d05e6a344c242a863c7e9a8';
+
+/// See also [UpdateInspection].
+@ProviderFor(UpdateInspection)
+final updateInspectionProvider =
+    AutoDisposeAsyncNotifierProvider<UpdateInspection, void>.internal(
+      UpdateInspection.new,
+      name: r'updateInspectionProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$updateInspectionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$UpdateInspection = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

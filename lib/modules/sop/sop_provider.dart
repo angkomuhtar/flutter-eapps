@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
@@ -13,7 +11,6 @@ part 'sop_provider.g.dart';
 class ListSop extends _$ListSop {
   late Dio _dio;
 
-  int _page = 1;
   String _filter = "";
   bool _hasMore = true;
   final List<ListSopModel> _items = [];
@@ -27,7 +24,6 @@ class ListSop extends _$ListSop {
 
   Future<List<ListSopModel>> _fetch({bool reset = false}) async {
     if (reset) {
-      _page = 1;
       _hasMore = true;
       _items.clear();
     }
@@ -48,8 +44,6 @@ class ListSop extends _$ListSop {
       final lastPage = res.data['meta']['last_page'];
 
       _hasMore = currentPage < lastPage;
-
-      if (_hasMore) _page++;
 
       return _items;
     } catch (e) {

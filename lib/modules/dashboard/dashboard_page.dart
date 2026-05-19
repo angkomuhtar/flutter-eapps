@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
+import 'package:flutter_eapps/core/utils/options_provider.dart';
 import 'package:flutter_eapps/modules/auth/auth_notifier.dart';
 import 'package:flutter_eapps/modules/dashboard/dashboard_repository.dart';
 import 'package:flutter_eapps/modules/dashboard/widget/profile_widget.dart';
@@ -14,11 +15,12 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userLoginDataProvider).valueOrNull;
     return LayoutBuilder(
       builder: (context, constraints) {
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(currentUserProvider);
+            ref.invalidate(userLoginDataProvider);
             ref.invalidate(todayAttendanceProvider);
           },
           child: SingleChildScrollView(
@@ -72,6 +74,73 @@ class DashboardPage extends ConsumerWidget {
                     Gap(20),
                     RekapWidget(),
                     AllFeatureWidget(),
+                    Gap(20),
+                    if (user != null &&
+                        (user.roles == 'superadmin' ||
+                            (user.employee?.class_jabatan != null &&
+                                user.employee!.class_jabatan >= 4)))
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Laporan & Pengajuan',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              'Laporan dan Pengajuan yang di tujukan kepada anda untuk di tindak lanjuti',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            Gap(24),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 16,
+                                children: [
+                                  FeatureButton(
+                                    title: "Hazard Report",
+                                    icon: "assets/features/hazard-report.png",
+                                    onTap: () => context.push('/hazard-report'),
+                                  ),
+                                  FeatureButton(
+                                    title: "Laporan Inspeksi",
+                                    icon: "assets/features/inspection.png",
+                                    onTap: () => {
+                                      context.push('/inspection-report'),
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     Gap(120),
                   ],
                 ),
@@ -183,21 +252,21 @@ class AllFeatureWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    FeatureButton(
-                      title: "Lupa Absen",
-                      icon: "assets/features/all-menu.png",
-                      onTap: () => {print("Lupa Absen")},
-                    ),
-                    FeatureButton(
-                      title: "Berita & Informasi",
-                      icon: "assets/features/all-menu.png",
-                      onTap: () => {print("Berita & Informasi")},
-                    ),
-                  ],
-                ),
+                // Column(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     FeatureButton(
+                //       title: "Lupa Absen",
+                //       icon: "assets/features/all-menu.png",
+                //       onTap: () => {print("Lupa Absen")},
+                //     ),
+                //     FeatureButton(
+                //       title: "Berita & Informasi",
+                //       icon: "assets/features/all-menu.png",
+                //       onTap: () => {print("Berita & Informasi")},
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

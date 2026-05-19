@@ -22,7 +22,7 @@ final listSopProvider =
     );
 
 typedef _$ListSop = AutoDisposeAsyncNotifier<List<ListSopModel>>;
-String _$sopDetailsHash() => r'504029924ae2259e36780c2d174b36739c28d493';
+String _$sopDetailsHash() => r'3f5446a804aa66505e7674586884b75e004da086';
 
 /// Copied from Dart SDK
 class _SystemHash {

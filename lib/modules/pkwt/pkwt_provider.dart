@@ -1,13 +1,10 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
 import 'package:flutter_eapps/core/dio/dio_provider.dart';
 import 'package:flutter_eapps/core/models/contract_model.dart';
-import 'package:flutter_eapps/core/models/hazard_model.dart';
 import 'package:flutter_eapps/core/utils/app.dart';
-import 'package:flutter_eapps/modules/auth/auth_notifier.dart';
+import 'package:flutter_eapps/core/utils/options_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pkwt_provider.g.dart';
@@ -29,7 +26,7 @@ class ListContract extends _$ListContract {
   }
 
   Future<List<ContractModel>> _fetch({bool reset = false}) async {
-    final user = ref.read(currentUserProvider).valueOrNull;
+    final user = ref.read(userLoginDataProvider).valueOrNull;
     if (reset) {
       _page = 1;
       _hasMore = true;

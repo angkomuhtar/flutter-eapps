@@ -236,3 +236,26 @@ class UserProfile {
     );
   }
 }
+
+class PICModel {
+  final int id;
+  final String name;
+  final String jabatan;
+  final String divisi;
+
+  PICModel({
+    required this.id,
+    required this.name,
+    required this.jabatan,
+    required this.divisi,
+  });
+
+  factory PICModel.fromJson(Map<String, dynamic> json) {
+    return PICModel(
+      id: json['id'],
+      name: json['name'] ?? '-',
+      jabatan: json['position'] ?? '-',
+      divisi: json['division'] ?? '-',
+    );
+  }
+}

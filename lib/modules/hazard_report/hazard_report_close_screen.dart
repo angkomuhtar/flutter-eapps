@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
-import 'package:flutter_eapps/modules/hazard_action/hazard_action_provider.dart';
+import 'package:flutter_eapps/modules/hazard_report/hazard_report_provider.dart';
 import 'package:flutter_eapps/widget/hazard/hazard-card-widget.dart';
 import 'package:flutter_eapps/widget/loading-list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-class HazardActionHistoryScreen extends ConsumerStatefulWidget {
-  const HazardActionHistoryScreen({super.key});
+class HazardReportCloseScreen extends ConsumerStatefulWidget {
+  const HazardReportCloseScreen({super.key});
 
   @override
-  ConsumerState<HazardActionHistoryScreen> createState() =>
-      _HazardActionHistoryScreenState();
+  ConsumerState<HazardReportCloseScreen> createState() =>
+      _HazardReportCloseScreenState();
 }
 
-class _HazardActionHistoryScreenState
-    extends ConsumerState<HazardActionHistoryScreen> {
+class _HazardReportCloseScreenState
+    extends ConsumerState<HazardReportCloseScreen> {
   final _scrollController = ScrollController();
   bool _isLoadingMore = false;
   bool _hasMore = true;
@@ -39,12 +39,12 @@ class _HazardActionHistoryScreenState
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 100) {
       _hasMore = ref
-          .read(listHazardActionProvider(filter: 'closed').notifier)
+          .read(listHazardReportProvider(filter: 'closed').notifier)
           .hasMore;
       if (!_hasMore) return;
       _isLoadingMore = true;
       ref
-          .read(listHazardActionProvider(filter: 'closed').notifier)
+          .read(listHazardReportProvider(filter: 'closed').notifier)
           .loadMore()
           .then((_) {
             _isLoadingMore = false;
@@ -54,9 +54,9 @@ class _HazardActionHistoryScreenState
 
   @override
   Widget build(BuildContext context) {
-    final historyAsync = ref.watch(listHazardActionProvider(filter: 'closed'));
+    final historyAsync = ref.watch(listHazardReportProvider(filter: 'closed'));
     final hasMore = ref
-        .read(listHazardActionProvider(filter: 'closed').notifier)
+        .read(listHazardReportProvider(filter: 'closed').notifier)
         .hasMore;
 
     return Column(
@@ -70,7 +70,7 @@ class _HazardActionHistoryScreenState
               }
               return RefreshIndicator(
                 onRefresh: () => ref
-                    .read(listHazardActionProvider(filter: 'closed').notifier)
+                    .read(listHazardReportProvider(filter: 'closed').notifier)
                     .refresh(),
                 child: Stack(
                   children: [
@@ -104,10 +104,7 @@ class _HazardActionHistoryScreenState
                         return hazardCard(
                           item: item,
                           onTap: () {
-                            debugPrint(
-                              "Hazard card tapped: ${item.hazard_number}",
-                            );
-                            context.push('/hazard-action/details/${item.id}');
+                            context.push('/hazard-report/${item.id}');
                           },
                         );
                       },

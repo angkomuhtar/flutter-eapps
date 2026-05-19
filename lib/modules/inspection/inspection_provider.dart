@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
 import 'package:flutter_eapps/core/dio/dio_provider.dart';
-import 'package:flutter_eapps/core/models/hazard_model.dart';
 import 'package:flutter_eapps/core/models/inspection_model.dart';
 import 'package:flutter_eapps/core/utils/app.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -182,6 +179,105 @@ class DetailInspection extends _$DetailInspection {
     } catch (e) {
       debugPrint('Error fetching inspection details: $e');
       throw Exception('Failed to load inspection details: $e');
+    }
+  }
+}
+
+@riverpod
+class InspectionReportHistory extends _$InspectionReportHistory {
+  late Dio _dio;
+
+  String _filter = "";
+  int _page = 1;
+  bool _hasMore = true;
+  final List<InspectionListModel> _items = [];
+
+  @override
+  Future<List<InspectionListModel>> build({String filter = ''}) async {
+    _dio = ref.read(dioProvider(ApiType.empapps));
+    _filter = filter;
+    return _fetch(reset: true);
+  }
+
+  Future<List<InspectionListModel>> _fetch({bool reset = false}) async {
+    if (reset) {
+      _page = 1;
+      _hasMore = true;
+      _items.clear();
+    }
+
+    if (!_hasMore) return _items;
+    try {
+      final res = await _dio.get(
+        '/inspection/report',
+        queryParameters: {'page': _page, 'status': _filter},
+      );
+
+      final data = res.data['data'];
+
+      final List list = data['data'];
+
+      final newItems = list
+          .map((e) => InspectionListModel.fromJson(e))
+          .toList();
+
+      _items.addAll(newItems);
+
+      final currentPage = data['current_page'];
+      final lastPage = data['last_page'];
+
+      _hasMore = currentPage < lastPage;
+
+      if (_hasMore) _page++;
+
+      return _items;
+    } catch (e) {
+      debugPrint('Error fetching inspection history: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> loadMore() async {
+    if (!_hasMore || state.isLoading) return;
+
+    state = await AsyncValue.guard(() async {
+      return await _fetch();
+    });
+  }
+
+  bool get hasMore => _hasMore;
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      return await _fetch(reset: true);
+    });
+  }
+}
+
+@riverpod
+class UpdateInspection extends _$UpdateInspection {
+  late final Dio _dio;
+
+  @override
+  FutureOr<void> build() {
+    _dio = ref.read(dioProvider(ApiType.empapps));
+  }
+
+  Future<(bool, String?)> upload(String id) async {
+    try {
+      await _dio.post('/inspection/${id}/verified');
+      ref.read(inspectionHistoryProvider.notifier).refresh();
+      return (true, null);
+    } catch (e) {
+      String errorMessage = 'Terjadi kesalahan';
+      if (e is DioException) {
+        final statusCode = e.response?.statusCode;
+        debugPrint('DioException: ${e.response}, Status code: $statusCode');
+        errorMessage = getErrorMessage(statusCode ?? 0);
+      }
+      return (false, errorMessage);
     }
   }
 }

@@ -442,7 +442,7 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                                               ),
                                             ),
                                             Text(
-                                              '${today!.shift?.name} (${DateFormat('HH:mm').format(DateFormat('HH:mm:ss').parse(today.shift!.start))} - ${DateFormat('HH:mm').format(DateFormat('HH:mm:ss').parse(today!.shift!.end))})',
+                                              '${today!.shift?.name} (${DateFormat('HH:mm').format(DateFormat('HH:mm:ss').parse(today.shift!.start))} - ${DateFormat('HH:mm').format(DateFormat('HH:mm:ss').parse(today.shift!.end))})',
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 color: AppColors.black,

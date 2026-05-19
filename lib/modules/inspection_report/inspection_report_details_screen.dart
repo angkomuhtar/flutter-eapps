@@ -6,6 +6,7 @@ import 'package:flutter_eapps/core/dio/dio_factory.dart';
 import 'package:flutter_eapps/core/dio/dio_provider.dart';
 import 'package:flutter_eapps/core/utils/app.dart';
 import 'package:flutter_eapps/modules/inspection/inspection_provider.dart';
+import 'package:flutter_eapps/widget/alert-widget.dart';
 import 'package:flutter_eapps/widget/appbar-widget.dart';
 import 'package:flutter_eapps/widget/loading-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,18 +17,18 @@ import 'package:flutter_eapps/widget/hazard/hazard_widget.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
-class InspectionDetailsScreen extends ConsumerStatefulWidget {
+class InspectionReportDetailsScreen extends ConsumerStatefulWidget {
   final String id;
 
-  const InspectionDetailsScreen({super.key, required this.id});
+  const InspectionReportDetailsScreen({super.key, required this.id});
 
   @override
-  ConsumerState<InspectionDetailsScreen> createState() =>
-      _InspectionDetailsScreenState();
+  ConsumerState<InspectionReportDetailsScreen> createState() =>
+      _InspectionReportDetailsScreenState();
 }
 
-class _InspectionDetailsScreenState
-    extends ConsumerState<InspectionDetailsScreen> {
+class _InspectionReportDetailsScreenState
+    extends ConsumerState<InspectionReportDetailsScreen> {
   Future<void> downloadFile(String url, String fileName) async {
     LoadingWidget.show(context, message: 'Mengunduh file...');
     try {
@@ -62,6 +63,33 @@ class _InspectionDetailsScreenState
     }
   }
 
+  Future<void> _submit({String id = ''}) async {
+    LoadingWidget.show(context, message: 'Memverifikasi Inspeksi...');
+    final (success, errorMessage) = await ref
+        .read(updateInspectionProvider.notifier)
+        .upload(id);
+
+    // if (!mounted) return;
+    LoadingWidget.hide(context);
+    if (success) {
+      await AlertWidget.show(
+        context: context,
+        title: 'Berhasil',
+        description: 'Berhasil memverifikasi laporan inspeksi',
+        type: 'success',
+      ).then((_) {
+        Navigator.pop(context);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage ?? 'Gagal memverifikasi laporan inspeksi'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final detailAsync = ref.watch(detailInspectionProvider(id: widget.id));
@@ -74,7 +102,7 @@ class _InspectionDetailsScreenState
           children: [
             detailAsync.maybeWhen(
               data: (data) => CustAppBar(
-                title: 'Detail Inspeksi',
+                title: 'Detail Laporan Inspeksi',
                 trailing: data.status == "verified"
                     ? Padding(
                         padding: const EdgeInsets.only(right: 8),
@@ -210,36 +238,6 @@ class _InspectionDetailsScreenState
                                 ),
                               ],
                             ),
-
-                            if (data.status == "verified") ...[
-                              Text(
-                                'Verifikator Inspeksi',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              ContBox(
-                                children: [
-                                  itemValue(
-                                    title: "Nama Verifikator",
-                                    value: data.supervisor?.name ?? '-',
-                                  ),
-                                  itemValue(
-                                    title: "Nomor Registrasi Verifikator",
-                                    value: data.supervisor?.nrp ?? '-',
-                                  ),
-                                  itemValue(
-                                    title: "Jabatan Verifikator",
-                                    value: data.supervisor?.position ?? '-',
-                                  ),
-                                  itemValue(
-                                    title: "Departement",
-                                    value: data.supervisor?.division ?? '-',
-                                  ),
-                                ],
-                              ),
-                            ],
                             Text(
                               'Hasil Inspeksi',
                               style: TextStyle(
@@ -316,6 +314,41 @@ class _InspectionDetailsScreenState
                 loading: () => Center(child: LoadingList()),
                 error: (e, st) => Center(child: ErrorList()),
               ),
+            ),
+            detailAsync.maybeWhen(
+              data: (data) => data.status == "created"
+                  ? Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(
+                        bottom: 26,
+                        left: 16,
+                        right: 16,
+                        top: 8,
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () => _submit(id: widget.id),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Verifikasi Inspeksi',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              orElse: () => SizedBox.shrink(),
             ),
           ],
         ),

@@ -7,7 +7,6 @@ import 'package:flutter_eapps/modules/sleep_duration/widget/sleep_item_widget.da
 import 'package:flutter_eapps/widget/loading-list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:lottie/lottie.dart';
 
 class SleepDurationHistoryScreen extends ConsumerStatefulWidget {
   const SleepDurationHistoryScreen({super.key});

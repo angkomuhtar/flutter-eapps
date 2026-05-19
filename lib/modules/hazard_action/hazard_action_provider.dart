@@ -44,7 +44,6 @@ class ListHazardAction extends _$ListHazardAction {
       final data = res.data['data'];
 
       final List list = data['data'];
-      debugPrint(list[1].toString());
 
       final newItems = list.map((e) => HazardItemModel.fromJson(e)).toList();
 

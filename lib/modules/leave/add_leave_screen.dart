@@ -214,6 +214,10 @@ class _AddLeaveScreenState extends ConsumerState<AddLeaveScreen> {
                       lastDate: DateTime(2030, 12, 31),
                     );
                     if (pickedDate != null) {
+                      LoadingWidget.show(
+                        context,
+                        message: 'Memeriksa kuota cuti...',
+                      );
                       setState(() {
                         startOptions['initial'] = pickedDate;
                         _startDateController.text = DateFormat(
@@ -250,6 +254,9 @@ class _AddLeaveScreenState extends ConsumerState<AddLeaveScreen> {
                           })
                           .catchError((e) {
                             debugPrint('Error fetching leave kuota: $e');
+                          })
+                          .whenComplete(() {
+                            LoadingWidget.hide(context);
                           });
                     }
                   },
@@ -339,7 +346,7 @@ class _AddLeaveScreenState extends ConsumerState<AddLeaveScreen> {
                       ),
                     ),
                     child: const Text(
-                      'Laporkan Bahaya',
+                      'Buat Pengajuan Cuti',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
-import 'package:flutter_eapps/modules/hazard/hazard_provider.dart';
 import 'package:flutter_eapps/modules/leave/leave_provider.dart';
 import 'package:flutter_eapps/widget/loading-list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

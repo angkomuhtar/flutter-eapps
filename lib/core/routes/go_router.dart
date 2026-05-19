@@ -8,10 +8,14 @@ import 'package:flutter_eapps/modules/hazard/hazard_details_screen.dart';
 import 'package:flutter_eapps/modules/hazard/hazard_page.dart';
 import 'package:flutter_eapps/modules/hazard_action/hazard_action_details_screen.dart';
 import 'package:flutter_eapps/modules/hazard_action/hazard_action_page.dart';
+import 'package:flutter_eapps/modules/hazard_report/hazard_report_details_screen.dart';
+import 'package:flutter_eapps/modules/hazard_report/hazard_report_page.dart';
 import 'package:flutter_eapps/modules/home/presentation/home_screen.dart';
 import 'package:flutter_eapps/modules/inspection/inspection_details_screen.dart';
 import 'package:flutter_eapps/modules/inspection/inspection_form_screen.dart';
 import 'package:flutter_eapps/modules/inspection/inspection_page.dart';
+import 'package:flutter_eapps/modules/inspection_report/inspection_report_details_screen.dart';
+import 'package:flutter_eapps/modules/inspection_report/inspection_report_page.dart';
 import 'package:flutter_eapps/modules/leave/leave_details_screen.dart';
 import 'package:flutter_eapps/modules/leave/leave_page.dart';
 import 'package:flutter_eapps/modules/notification/notification_page.dart';
@@ -195,6 +199,28 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           id: state.pathParameters['id']!,
           folder: state.extra as String,
         ),
+      ),
+      GoRoute(
+        path: '/hazard-report',
+        name: 'hazard-report',
+        builder: (context, state) => const HazardReportPage(),
+      ),
+      GoRoute(
+        path: '/hazard-report/:id',
+        name: 'hazard-report-details',
+        builder: (context, state) =>
+            HazardReportDetailsScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/inspection-report',
+        name: 'inspection-report',
+        builder: (context, state) => const InspectionReportPage(),
+      ),
+      GoRoute(
+        path: '/inspection-report/:id',
+        name: 'inspection-report-details',
+        builder: (context, state) =>
+            InspectionReportDetailsScreen(id: state.pathParameters['id']!),
       ),
     ],
     errorBuilder: (context, state) =>

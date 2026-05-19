@@ -30,7 +30,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: IndexedStack(index: _selectedIndex, children: _pages),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(bottom: 24),
+        padding: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomCenter,
@@ -42,49 +42,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.black.withValues(alpha: 0.15),
-                    blurRadius: 15,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: GNav(
-                  gap: 6,
-                  activeColor: AppColors.primary,
-                  iconSize: 22,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  tabMargin: EdgeInsetsGeometry.symmetric(horizontal: 6),
-                  tabBorderRadius: 10,
-                  duration: const Duration(milliseconds: 300),
-                  tabBackgroundColor: AppColors.white,
-                  color: AppColors.white,
-                  selectedIndex: _selectedIndex,
-                  onTabChange: (index) {
-                    setState(() => _selectedIndex = index);
-                  },
-                  tabs: const [
-                    GButton(icon: Icons.home, text: 'Home'),
-                    GButton(icon: Icons.fingerprint_sharp, text: 'Absensi'),
-                    GButton(icon: Icons.person, text: 'Profil'),
+        child: SafeArea(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black.withValues(alpha: 0.15),
+                      blurRadius: 15,
+                      offset: const Offset(0, 4),
+                    ),
                   ],
                 ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: GNav(
+                    gap: 6,
+                    activeColor: AppColors.primary,
+                    iconSize: 22,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    tabMargin: EdgeInsetsGeometry.symmetric(horizontal: 6),
+                    tabBorderRadius: 10,
+                    duration: const Duration(milliseconds: 300),
+                    tabBackgroundColor: AppColors.white,
+                    color: AppColors.white,
+                    selectedIndex: _selectedIndex,
+                    onTabChange: (index) {
+                      setState(() => _selectedIndex = index);
+                    },
+                    tabs: const [
+                      GButton(icon: Icons.home, text: 'Home'),
+                      GButton(icon: Icons.fingerprint_sharp, text: 'Absensi'),
+                      GButton(icon: Icons.person, text: 'Profil'),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
-import 'package:flutter_eapps/modules/auth/auth_notifier.dart';
+import 'package:flutter_eapps/core/utils/options_provider.dart';
+// import 'package:flutter_eapps/modules/auth/auth_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 class ProfileWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userAsyncValue = ref.watch(currentUserProvider);
+    final userAsyncValue = ref.watch(userLoginDataProvider);
     return userAsyncValue.when(
       data: (user) {
         return Row(

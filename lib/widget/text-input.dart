@@ -15,7 +15,10 @@ class InputText extends StatelessWidget {
   final bool readOnly;
   final bool disable;
   final VoidCallback? onTap;
+  final VoidCallback? onEditingComplete;
   final String? initialValue;
+  final bool autofocus;
+  final void Function(String?)? onChanged;
 
   const InputText({
     super.key,
@@ -32,7 +35,10 @@ class InputText extends StatelessWidget {
     this.readOnly = false,
     this.disable = false,
     this.onTap,
+    this.onEditingComplete,
     this.initialValue,
+    this.autofocus = false,
+    this.onChanged,
   });
 
   @override
@@ -44,9 +50,12 @@ class InputText extends StatelessWidget {
       maxLines: maxLines,
       minLines: minLines,
       initialValue: initialValue,
+      autofocus: autofocus,
       readOnly: readOnly,
       enabled: !disable,
       onTap: onTap,
+      onEditingComplete: onEditingComplete,
+      onChanged: onChanged,
       style: TextStyle(
         color: disable ? AppColors.grey : AppColors.black,
         fontSize: 14,

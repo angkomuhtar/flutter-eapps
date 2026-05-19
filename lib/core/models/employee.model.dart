@@ -3,6 +3,8 @@ class EmployeeModel {
   final String nip;
   final String jabatan;
   final int id_jabatan;
+  final int class_jabatan;
+  final String type_jabatan;
   final String divisi;
   final int id_divisi;
 
@@ -11,6 +13,8 @@ class EmployeeModel {
     required this.nip,
     required this.jabatan,
     required this.id_jabatan,
+    required this.class_jabatan,
+    required this.type_jabatan,
     required this.divisi,
     required this.id_divisi,
   });
@@ -20,6 +24,8 @@ class EmployeeModel {
       id: json['id'],
       nip: json['nip'],
       jabatan: json['position']['position'],
+      class_jabatan: json['position']['position_class']['class'] ?? 0,
+      type_jabatan: json['position']['position_class']['class_name'] ?? '',
       id_jabatan: json['position_id'],
       divisi: json['division']['division'],
       id_divisi: json['division_id'],

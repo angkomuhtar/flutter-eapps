@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 String getSleepDuration(DateTime start, DateTime end) {
   final duration = end.difference(start);
   return '${duration.inHours}j ${duration.inMinutes.remainder(60)}m';
@@ -26,4 +31,24 @@ String getErrorMessage(int statusCode) {
     503 => 'Server sedang dalam pemeliharaan',
     _ => 'Terjadi kesalahan, silakan coba lagi',
   };
+}
+
+Future<bool> requestStoragePermission() async {
+  // Android 13+ (SDK 33+) — tidak perlu permission untuk simpan ke app folder
+  if (Platform.isAndroid) {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+
+    if (androidInfo.version.sdkInt >= 33) {
+      // Tidak perlu permission untuk simpan ke getExternalFilesDir
+      return true;
+    } else if (androidInfo.version.sdkInt >= 30) {
+      // Android 11-12 — tidak perlu permission untuk app-specific storage
+      return true;
+    } else {
+      // Android < 11 — perlu WRITE_EXTERNAL_STORAGE
+      final status = await Permission.storage.request();
+      return status.isGranted;
+    }
+  }
+  return true;
 }
