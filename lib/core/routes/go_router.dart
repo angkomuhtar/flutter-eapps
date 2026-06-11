@@ -3,6 +3,7 @@ import 'package:flutter_eapps/core/models/contract_model.dart';
 import 'package:flutter_eapps/modules/attendance/attendance_history_screen.dart';
 import 'package:flutter_eapps/modules/attendance/attendance_page.dart';
 import 'package:flutter_eapps/modules/auth/login_screen.dart';
+import 'package:flutter_eapps/modules/daily_activity/daily_activity_page.dart';
 import 'package:flutter_eapps/modules/dashboard/dashboard_page.dart';
 import 'package:flutter_eapps/modules/hazard/hazard_details_screen.dart';
 import 'package:flutter_eapps/modules/hazard/hazard_page.dart';
@@ -221,6 +222,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: 'inspection-report-details',
         builder: (context, state) =>
             InspectionReportDetailsScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/daily-activity',
+        name: 'daily-activity',
+        builder: (context, state) => const DailyActivityPage(),
       ),
     ],
     errorBuilder: (context, state) =>

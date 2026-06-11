@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
@@ -44,7 +46,10 @@ class ListContract extends _$ListContract {
 
       final List list = data['data'];
 
-      final newItems = list.map((e) => ContractModel.fromJson(e)).toList();
+      final newItems = list.map((e) {
+        print(e);
+        return ContractModel.fromJson(e);
+      }).toList();
 
       _items.addAll(newItems);
 
@@ -57,7 +62,7 @@ class ListContract extends _$ListContract {
 
       return _items;
     } catch (e) {
-      debugPrint('Error fetching hazards: $e');
+      debugPrint('Error fetching kontrak: $e');
       rethrow;
     }
   }
@@ -113,63 +118,3 @@ class SignedContract extends _$SignedContract {
     }
   }
 }
-// @riverpod
-// class UploadHazard extends _$UploadHazard {
-//   late final Dio _dio;
-
-//   @override
-//   FutureOr<void> build() {
-//     _dio = ref.read(dioProvider(ApiType.empapps));
-//   }
-
-//   Future<(bool, String?)> upload(Map<String, dynamic> data) async {
-//     try {
-//       final image = data['report_attachment'] as File;
-//       final fileName = image.path.split('/').last;
-//       final formData = FormData.fromMap({
-//         ...data,
-//         'report_attachment': await MultipartFile.fromFile(
-//           image.path,
-//           filename: fileName,
-//         ),
-//       });
-
-//       await _dio.post('/hazard', data: formData);
-
-//       ref.read(listHazardProvider.notifier).refresh();
-//       return (true, null);
-//     } catch (e) {
-//       String errorMessage = 'Terjadi kesalahan';
-//       if (e is DioException) {
-//         final statusCode = e.response?.statusCode;
-//         debugPrint('DioException: ${e.response}, Status code: $statusCode');
-//         errorMessage = getErrorMessage(statusCode ?? 0);
-//       }
-//       return (false, errorMessage);
-//     }
-//   }
-// }
-
-// @riverpod
-// class DetailHazard extends _$DetailHazard {
-//   late Dio _dio;
-
-//   @override
-//   Future<HazardModel> build({required String id}) async {
-//     _dio = ref.read(dioProvider(ApiType.empapps));
-//     return _fetch(id: id);
-//   }
-
-//   Future<HazardModel> _fetch({required String id}) async {
-//     try {
-//       final res = await _dio.get('/hazard/$id');
-
-//       final data = res.data['data'];
-//       final item = HazardModel.fromJson(data);
-//       return item;
-//     } catch (e) {
-//       debugPrint('Error fetching hazard details: $e');
-//       throw Exception('Failed to load hazard details: $e');
-//     }
-//   }
-// }

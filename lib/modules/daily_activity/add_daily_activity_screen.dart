@@ -8,28 +8,23 @@ import 'package:flutter_eapps/modules/hazard/hazard_page.dart';
 import 'package:flutter_eapps/modules/hazard/hazard_provider.dart';
 import 'package:flutter_eapps/widget/alert-widget.dart';
 import 'package:flutter_eapps/widget/dropdown-widget.dart';
-import 'package:flutter_eapps/widget/image-pick-dialog.dart';
 import 'package:flutter_eapps/widget/loading-widget.dart';
 import 'package:flutter_eapps/widget/text-input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class AddHazardScreen extends ConsumerStatefulWidget {
-  const AddHazardScreen({super.key});
+class AddDailyActivityScreen extends ConsumerStatefulWidget {
+  const AddDailyActivityScreen({super.key});
 
   @override
-  ConsumerState<AddHazardScreen> createState() => _AddHazardScreenState();
+  ConsumerState<AddDailyActivityScreen> createState() =>
+      _AddDailyActivityScreenState();
 }
 
-const _categoryOptions = [
-  {'value': 'TTA', 'label': 'Tindakan Tidak Aman'},
-  {'value': 'KTA', 'label': 'Kondisi Tidak Aman'},
-];
-
-class _AddHazardScreenState extends ConsumerState<AddHazardScreen> {
+class _AddDailyActivityScreenState
+    extends ConsumerState<AddDailyActivityScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formData = <String, dynamic>{};
   final _dueDateController = TextEditingController();
@@ -37,7 +32,6 @@ class _AddHazardScreenState extends ConsumerState<AddHazardScreen> {
   CompanyModel? _selectedCompany;
   ProjectModel? _selectedProject;
   DepartementModel? _selectedDepartement;
-  Map<String, String>? _selectedCategory;
   File? selectedImage;
   DateTime? selectedDate;
 
@@ -51,7 +45,7 @@ class _AddHazardScreenState extends ConsumerState<AddHazardScreen> {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
 
-    LoadingWidget.show(context, message: 'Menyimpan laporan bahaya...');
+    LoadingWidget.show(context, message: 'Menyimpan aktivitas harian...');
 
     final (success, errorMessage) = await ref
         .read(uploadHazardProvider.notifier)
@@ -68,7 +62,6 @@ class _AddHazardScreenState extends ConsumerState<AddHazardScreen> {
         _selectedCompany = null;
         _selectedProject = null;
         _selectedDepartement = null;
-        _selectedCategory = null;
         selectedImage = null;
         selectedDate = null;
         _dueDateController.clear();
@@ -154,7 +147,9 @@ class _AddHazardScreenState extends ConsumerState<AddHazardScreen> {
             .valueOrNull ??
         [];
 
-    debugPrint(departement.toString());
+    final user = ref.watch(userLoginDataProvider).valueOrNull;
+
+    debugPrint(user.toString());
 
     return SingleChildScrollView(
       child: SafeArea(
@@ -167,6 +162,40 @@ class _AddHazardScreenState extends ConsumerState<AddHazardScreen> {
               spacing: 16,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                InputText(
+                  labelText: 'Nama',
+                  initialValue: user?.name ?? '',
+                  disable: true,
+                  keyboardType: TextInputType.text,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Nama harus diisi',
+                    ),
+                  ]),
+                ),
+                InputText(
+                  labelText: 'NIK',
+                  initialValue: user?.employee?.nip ?? '',
+                  disable: true,
+                  keyboardType: TextInputType.text,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'NIK harus diisi',
+                    ),
+                  ]),
+                ),
+                InputText(
+                  labelText: 'Jabatan',
+                  initialValue: user?.employee?.jabatan ?? '',
+                  disable: true,
+                  keyboardType: TextInputType.text,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Jabatan harus diisi',
+                    ),
+                  ]),
+                ),
+
                 DropdownWidget<HazardLocationModel>(
                   labelText: 'Lokasi temuan bahaya',
                   value: _selectedHazardLocation,
@@ -271,196 +300,6 @@ class _AddHazardScreenState extends ConsumerState<AddHazardScreen> {
                   },
                 ),
 
-                Text(
-                  "Detail Temuan Bahaya",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.secondaryDark,
-                  ),
-                  textAlign: TextAlign.start,
-                ),
-
-                DropdownWidget<Map<String, String>>(
-                  labelText: 'Kategori',
-                  value: _selectedCategory,
-                  items: _categoryOptions,
-                  itemLabel: (category) => category['label'] ?? '',
-                  validator: FormBuilderValidators.required(
-                    errorText: 'Pilih salah satu',
-                  ),
-                  onChanged: (value) {
-                    debugPrint(value.toString());
-                    setState(() {
-                      _selectedCategory = value;
-                      _formData['category'] = value?['value'];
-                    });
-                  },
-                ),
-                InputText(
-                  key: const ValueKey('reported_condition'),
-                  labelText: 'Kondisi/Perilaku yang dilaporkan',
-                  keyboardType: TextInputType.multiline,
-                  minLines: 2,
-                  maxLines: 2,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(errorText: 'harus diisi'),
-                  ]),
-                  onSaved: (value) {
-                    _formData['reported_condition'] = value;
-                  },
-                ),
-                InputText(
-                  key: const ValueKey('recomended_action'),
-                  labelText: 'Tindakan yang direkomendasikan',
-                  keyboardType: TextInputType.multiline,
-                  minLines: 2,
-                  maxLines: 2,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(errorText: 'harus diisi'),
-                  ]),
-                  onSaved: (value) {
-                    _formData['recomended_action'] = value;
-                  },
-                ),
-                InputText(
-                  key: const ValueKey('action_taken'),
-                  labelText: 'Tindakan yang diambil',
-                  keyboardType: TextInputType.multiline,
-                  minLines: 2,
-                  maxLines: 2,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(errorText: 'harus diisi'),
-                  ]),
-                  onSaved: (value) {
-                    _formData['action_taken'] = value;
-                  },
-                ),
-                FormField<File>(
-                  validator: (value) {
-                    if (selectedImage == null) {
-                      return 'Foto harus diisi';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _formData['report_attachment'] = selectedImage;
-                  },
-                  builder: (state) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          constraints: BoxConstraints(minHeight: 200),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: state.hasError
-                                  ? Colors.red
-                                  : AppColors.secondaryLight,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: selectedImage != null
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: AspectRatio(
-                                          aspectRatio: 3 / 2,
-                                          child: Image.file(
-                                            selectedImage!,
-                                            height: 150,
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                      ),
-                                      Gap(12),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          ElevatedButton(
-                                            style: ButtonStyle(
-                                              padding: WidgetStatePropertyAll(
-                                                const EdgeInsets.symmetric(
-                                                  horizontal: 16,
-                                                  vertical: 8,
-                                                ),
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              ImagePickDialog(
-                                                onCamera: () =>
-                                                    chooseImage('camera'),
-                                                onGallery: () =>
-                                                    chooseImage('gallery'),
-                                              ).show(context);
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.camera_alt_rounded,
-                                                  color:
-                                                      AppColors.secondaryLight,
-                                                ),
-                                                Gap(8),
-                                                Text(
-                                                  'Ubah Foto',
-                                                  style: TextStyle(
-                                                    color: AppColors
-                                                        .secondaryLight,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : Column(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          ImagePickDialog(
-                                            onCamera: () =>
-                                                chooseImage('camera'),
-                                            onGallery: () =>
-                                                chooseImage('gallery'),
-                                          ).show(context);
-                                        },
-                                        icon: Icon(
-                                          Icons.camera_alt_rounded,
-                                          color: AppColors.secondaryLight,
-                                          size: 40,
-                                        ),
-                                      ),
-                                      Text('Foto Temuan'),
-                                    ],
-                                  ),
-                          ),
-                        ),
-                        if (state.hasError)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12, top: 8),
-                            child: Text(
-                              state.errorText!,
-                              style: TextStyle(
-                                color: Colors.red.shade700,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                      ],
-                    );
-                  },
-                ),
                 InputText(
                   key: const ValueKey('due_date'),
                   controller: _dueDateController,

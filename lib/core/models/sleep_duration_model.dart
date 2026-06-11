@@ -21,7 +21,7 @@ class SleepDurationModel {
       end: json['end'],
       date: json['date'],
       stage: json['stage'],
-      attachment: json['attachment'],
+      attachment: json['attachment'] ?? '',
       status: json['status'],
     );
   }

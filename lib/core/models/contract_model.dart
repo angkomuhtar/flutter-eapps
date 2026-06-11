@@ -2,7 +2,7 @@ class ContractModel {
   final int id;
   final String code;
   final String contractNumber;
-  final String previousEndDate;
+  final String? previousEndDate;
   final String startDate;
   final String endDate;
   final String status;

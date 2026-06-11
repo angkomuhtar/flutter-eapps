@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
-import 'package:flutter_eapps/modules/hazard/add_hazard_screen.dart';
+import 'package:flutter_eapps/modules/daily_activity/add_daily_activity_screen.dart';
 import 'package:flutter_eapps/modules/hazard/hazard_history_screen.dart';
 import 'package:flutter_eapps/widget/appbar-widget.dart';
 import 'package:flutter_eapps/widget/cust-tabbar-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final hazardTabControllerProvider = StateProvider<TabController?>((ref) => null);
+final dailyActivityTabControllerProvider = StateProvider<TabController?>(
+  (ref) => null,
+);
 
-class HazardPage extends ConsumerStatefulWidget {
-  const HazardPage({super.key});
+class DailyActivityPage extends ConsumerStatefulWidget {
+  const DailyActivityPage({super.key});
 
   @override
-  ConsumerState<HazardPage> createState() => _HazardPage();
+  ConsumerState<DailyActivityPage> createState() => _DailyActivityPageState();
 }
 
-class _HazardPage extends ConsumerState<HazardPage>
+class _DailyActivityPageState extends ConsumerState<DailyActivityPage>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   late final TabController _tabController;
 
-  final List<Widget> _tabs = const [AddHazardScreen(), HazardHistoryScreen()];
+  final List<Widget> _tabs = const [
+    AddDailyActivityScreen(),
+    HazardHistoryScreen(),
+  ];
 
   @override
   void initState() {
@@ -29,9 +34,10 @@ class _HazardPage extends ConsumerState<HazardPage>
     _tabController.addListener(() {
       setState(() => _selectedIndex = _tabController.index);
     });
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(hazardTabControllerProvider.notifier).state = _tabController;
+      ref.read(dailyActivityTabControllerProvider.notifier).state =
+          _tabController;
     });
   }
 
@@ -49,19 +55,19 @@ class _HazardPage extends ConsumerState<HazardPage>
         bottom: false,
         child: Column(
           children: [
-            CustAppBar(title: 'Pelaporan Bahaya'),
+            CustAppBar(title: 'Aktivitas Harian'),
             CustTabBar(
               selectedIndex: _selectedIndex,
               tabs: [
                 Tabs(
-                  text: 'Buat Laporan',
+                  text: 'Buat Baru',
                   icon: Icons.difference_rounded,
                   onTap: () {
                     _tabController.animateTo(0);
                   },
                 ),
                 Tabs(
-                  text: 'History',
+                  text: 'Riwayat',
                   icon: Icons.history,
                   onTap: () {
                     _tabController.animateTo(1);

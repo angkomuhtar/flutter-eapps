@@ -80,7 +80,10 @@ class _SleepDurationHistoryScreenState
           );
         },
         loading: () => Center(child: LoadingList()),
-        error: (e, st) => Center(child: ErrorList()),
+        error: (e, st) {
+          print(e);
+          return Center(child: ErrorList());
+        },
       ),
     );
   }

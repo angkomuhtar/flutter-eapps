@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
 import 'package:flutter_eapps/core/utils/options_provider.dart';
-import 'package:flutter_eapps/modules/auth/auth_notifier.dart';
 import 'package:flutter_eapps/modules/dashboard/dashboard_repository.dart';
 import 'package:flutter_eapps/modules/dashboard/widget/profile_widget.dart';
 import 'package:flutter_eapps/modules/dashboard/widget/rekap_widget.dart';
@@ -16,6 +15,7 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userLoginDataProvider).valueOrNull;
+    double reportWidth = MediaQuery.of(context).size.width - (16 * 7);
     return LayoutBuilder(
       builder: (context, constraints) {
         return RefreshIndicator(
@@ -28,7 +28,7 @@ class DashboardPage extends ConsumerWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
                     Gap(40),
@@ -127,6 +127,7 @@ class DashboardPage extends ConsumerWidget {
                                     title: "Hazard Report",
                                     icon: "assets/features/hazard-report.png",
                                     onTap: () => context.push('/hazard-report'),
+                                    width: reportWidth * 0.25,
                                   ),
                                   FeatureButton(
                                     title: "Laporan Inspeksi",
@@ -134,6 +135,7 @@ class DashboardPage extends ConsumerWidget {
                                     onTap: () => {
                                       context.push('/inspection-report'),
                                     },
+                                    width: reportWidth * 0.25,
                                   ),
                                 ],
                               ),
@@ -228,7 +230,7 @@ class AllFeatureWidget extends StatelessWidget {
                     FeatureButton(
                       title: "Daily Activity",
                       icon: "assets/features/daily-activity.png",
-                      onTap: () => {print("Daily Activity")},
+                      onTap: () => {context.push('/daily-activity')},
                     ),
                     FeatureButton(
                       title: "P2H",
@@ -252,21 +254,6 @@ class AllFeatureWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     FeatureButton(
-                //       title: "Lupa Absen",
-                //       icon: "assets/features/all-menu.png",
-                //       onTap: () => {print("Lupa Absen")},
-                //     ),
-                //     FeatureButton(
-                //       title: "Berita & Informasi",
-                //       icon: "assets/features/all-menu.png",
-                //       onTap: () => {print("Berita & Informasi")},
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -280,31 +267,22 @@ class FeatureButton extends StatelessWidget {
   final String title;
   final String icon;
   final VoidCallback onTap;
+  final double width;
 
   const FeatureButton({
     super.key,
     this.title = "",
     this.icon = "",
+    this.width = 0,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    double defaultWidth = MediaQuery.of(context).size.width - (16 * 5);
     return Container(
-      width: 70,
+      width: width == 0 ? defaultWidth * 0.25 : width,
       height: 110,
-      // decoration: BoxDecoration(
-      //   color: AppColors.white,
-      //   borderRadius: BorderRadius.circular(5),
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: Colors.grey.shade300,
-      //       spreadRadius: 2,
-      //       blurRadius: 5,
-      //       offset: const Offset(0, 3),
-      //     ),
-      //   ],
-      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,

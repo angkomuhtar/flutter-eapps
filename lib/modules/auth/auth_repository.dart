@@ -49,7 +49,7 @@ class AuthRepository {
   Future<bool> refreshToken(Dio dio) async {
     try {
       final res = await dio.post('/auth/refresh');
-      await saveToken(res.data['token']);
+      await saveToken(res.data['authorisation']['token']);
       return true;
     } catch (_) {
       return false;

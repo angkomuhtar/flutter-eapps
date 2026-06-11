@@ -117,10 +117,11 @@ class ClockInOut extends _$ClockInOut {
       );
       ref.invalidate(todayProvider);
     } catch (e) {
-      // if (e is DioException) {
-      // } else {
-      //   print('Clock $type error: $e');
-      // }
+      if (e is DioException) {
+      } else {
+        print('Clock $type error: $e');
+      }
+      print('Clock error: $e');
       throw e;
     }
   }

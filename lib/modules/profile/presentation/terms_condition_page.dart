@@ -24,97 +24,96 @@ class TermsConditionPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Dengan menggunakan aplikasi ini, Anda menyetujui syarat dan ketentuan berikut:',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textSecondary,
-                height: 1.5,
-              ),
-            ),
-            const Gap(16),
-            _buildAccordionItem(
-              title: '1. Penggunaan Aplikasi',
-              content:
-                  'Aplikasi ini dirancang untuk membantu karyawan dalam melakukan absensi, pelaporan, dan manajemen tugas harian. Pengguna wajib menggunakan aplikasi sesuai dengan ketentuan perusahaan dan tidak diperkenankan untuk menyalahgunakan fitur yang tersedia.',
-            ),
-            _buildAccordionItem(
-              title: '2. Akun dan Keamanan',
-              content:
-                  'Setiap pengguna bertanggung jawab untuk menjaga kerahasiaan kredensial akun mereka. Pengguna tidak diperbolehkan untuk membagikan informasi login kepada pihak lain. Perusahaan tidak bertanggung jawab atas penyalahgunaan akun yang terjadi akibat kelalaian pengguna.',
-            ),
-            _buildAccordionItem(
-              title: '3. Data dan Privasi',
-              content:
-                  'Data yang dikumpulkan melalui aplikasi ini akan digunakan untuk keperluan internal perusahaan dan tidak akan dibagikan kepada pihak ketiga tanpa persetujuan pengguna, kecuali diwajibkan oleh hukum. Perusahaan berkomitmen untuk melindungi privasi dan keamanan data pengguna.',
-            ),
-            _buildAccordionItem(
-              title: '4. Absensi dan Pelaporan',
-              content:
-                  'Pengguna wajib melakukan absensi sesuai dengan jadwal yang telah ditentukan. Setiap laporan yang disubmit harus akurat dan jujur. Pemalsuan data atau informasi dapat berakibat pada tindakan disipliner sesuai kebijakan perusahaan.',
-            ),
-            _buildAccordionItem(
-              title: '5. Pembaruan Aplikasi',
-              content:
-                  'Perusahaan berhak untuk melakukan pembaruan atau perubahan pada aplikasi tanpa pemberitahuan sebelumnya. Pengguna disarankan untuk selalu menggunakan versi terbaru dari aplikasi untuk mendapatkan fitur dan keamanan yang optimal.',
-            ),
-            _buildAccordionItem(
-              title: '6. Penghentian Layanan',
-              content:
-                  'Perusahaan berhak untuk menghentikan atau menangguhkan akses pengguna terhadap aplikasi jika terdapat pelanggaran terhadap syarat dan ketentuan ini atau kebijakan perusahaan lainnya.',
-            ),
-            _buildAccordionItem(
-              title: '7. Batasan Tanggung Jawab',
-              content:
-                  'Perusahaan tidak bertanggung jawab atas kerugian atau kerusakan yang timbul akibat penggunaan atau ketidakmampuan untuk menggunakan aplikasi, termasuk namun tidak terbatas pada kehilangan data, gangguan teknis, atau kesalahan sistem.',
-            ),
-            _buildAccordionItem(
-              title: '8. Perubahan Syarat dan Ketentuan',
-              content:
-                  'Perusahaan berhak untuk mengubah syarat dan ketentuan ini sewaktu-waktu. Perubahan akan diinformasikan melalui aplikasi atau saluran komunikasi resmi perusahaan. Pengguna disarankan untuk meninjau syarat dan ketentuan secara berkala.',
-            ),
-            _buildAccordionItem(
-              title: '9. Hukum yang Berlaku',
-              content:
-                  'Syarat dan ketentuan ini tunduk pada hukum yang berlaku di Republik Indonesia. Setiap sengketa yang timbul akan diselesaikan melalui mekanisme penyelesaian yang disepakati oleh kedua belah pihak.',
-            ),
-            _buildAccordionItem(
-              title: '10. Kontak',
-              content:
-                  'Jika Anda memiliki pertanyaan atau memerlukan bantuan terkait syarat dan ketentuan ini, silakan hubungi tim HR atau IT Support perusahaan melalui email atau telepon yang tertera di aplikasi.',
-            ),
-            const Gap(24),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                'Terakhir diperbarui: Januari 2024',
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Dengan menggunakan aplikasi ini, Anda menyetujui syarat dan ketentuan berikut:',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   color: AppColors.textSecondary,
-                  fontStyle: FontStyle.italic,
+                  height: 1.5,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+              const Gap(16),
+              _buildAccordionItem(
+                title: '1. Penggunaan Aplikasi',
+                content:
+                    'Aplikasi ini dirancang untuk membantu karyawan dalam melakukan absensi, pelaporan, dan manajemen tugas harian. Pengguna wajib menggunakan aplikasi sesuai dengan ketentuan perusahaan dan tidak diperkenankan untuk menyalahgunakan fitur yang tersedia.',
+              ),
+              _buildAccordionItem(
+                title: '2. Akun dan Keamanan',
+                content:
+                    'Setiap pengguna bertanggung jawab untuk menjaga kerahasiaan kredensial akun mereka. Pengguna tidak diperbolehkan untuk membagikan informasi login kepada pihak lain. Perusahaan tidak bertanggung jawab atas penyalahgunaan akun yang terjadi akibat kelalaian pengguna.',
+              ),
+              _buildAccordionItem(
+                title: '3. Data dan Privasi',
+                content:
+                    'Data yang dikumpulkan melalui aplikasi ini akan digunakan untuk keperluan internal perusahaan dan tidak akan dibagikan kepada pihak ketiga tanpa persetujuan pengguna, kecuali diwajibkan oleh hukum. Perusahaan berkomitmen untuk melindungi privasi dan keamanan data pengguna.',
+              ),
+              _buildAccordionItem(
+                title: '4. Absensi dan Pelaporan',
+                content:
+                    'Pengguna wajib melakukan absensi sesuai dengan jadwal yang telah ditentukan. Setiap laporan yang disubmit harus akurat dan jujur. Pemalsuan data atau informasi dapat berakibat pada tindakan disipliner sesuai kebijakan perusahaan.',
+              ),
+              _buildAccordionItem(
+                title: '5. Pembaruan Aplikasi',
+                content:
+                    'Perusahaan berhak untuk melakukan pembaruan atau perubahan pada aplikasi tanpa pemberitahuan sebelumnya. Pengguna disarankan untuk selalu menggunakan versi terbaru dari aplikasi untuk mendapatkan fitur dan keamanan yang optimal.',
+              ),
+              _buildAccordionItem(
+                title: '6. Penghentian Layanan',
+                content:
+                    'Perusahaan berhak untuk menghentikan atau menangguhkan akses pengguna terhadap aplikasi jika terdapat pelanggaran terhadap syarat dan ketentuan ini atau kebijakan perusahaan lainnya.',
+              ),
+              _buildAccordionItem(
+                title: '7. Batasan Tanggung Jawab',
+                content:
+                    'Perusahaan tidak bertanggung jawab atas kerugian atau kerusakan yang timbul akibat penggunaan atau ketidakmampuan untuk menggunakan aplikasi, termasuk namun tidak terbatas pada kehilangan data, gangguan teknis, atau kesalahan sistem.',
+              ),
+              _buildAccordionItem(
+                title: '8. Perubahan Syarat dan Ketentuan',
+                content:
+                    'Perusahaan berhak untuk mengubah syarat dan ketentuan ini sewaktu-waktu. Perubahan akan diinformasikan melalui aplikasi atau saluran komunikasi resmi perusahaan. Pengguna disarankan untuk meninjau syarat dan ketentuan secara berkala.',
+              ),
+              _buildAccordionItem(
+                title: '9. Hukum yang Berlaku',
+                content:
+                    'Syarat dan ketentuan ini tunduk pada hukum yang berlaku di Republik Indonesia. Setiap sengketa yang timbul akan diselesaikan melalui mekanisme penyelesaian yang disepakati oleh kedua belah pihak.',
+              ),
+              _buildAccordionItem(
+                title: '10. Kontak',
+                content:
+                    'Jika Anda memiliki pertanyaan atau memerlukan bantuan terkait syarat dan ketentuan ini, silakan hubungi tim HR atau IT Support perusahaan melalui email atau telepon yang tertera di aplikasi.',
+              ),
+              const Gap(24),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Terakhir diperbarui: Januari 2024',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildAccordionItem({
-    required String title,
-    required String content,
-  }) {
+  Widget _buildAccordionItem({required String title, required String content}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(

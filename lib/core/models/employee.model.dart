@@ -24,8 +24,9 @@ class EmployeeModel {
       id: json['id'],
       nip: json['nip'],
       jabatan: json['position']['position'],
-      class_jabatan: json['position']['position_class']['class'] ?? 0,
-      type_jabatan: json['position']['position_class']['class_name'] ?? '',
+      class_jabatan: json['position']['position_class']?['class'] ?? 0,
+      type_jabatan:
+          json['position']['position_class']?['class_name'] ?? 'tidak ada',
       id_jabatan: json['position_id'],
       divisi: json['division']['division'],
       id_divisi: json['division_id'],

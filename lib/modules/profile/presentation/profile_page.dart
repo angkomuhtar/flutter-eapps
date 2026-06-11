@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eapps/core/utils/options_provider.dart';
 import 'package:flutter_eapps/modules/auth/auth_notifier.dart';
 import 'package:flutter_eapps/widget/alert-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,7 +52,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   Widget _buildHeader() {
-    final userAsync = ref.watch(currentUserProvider);
+    final userAsync = ref.watch(userLoginDataProvider);
 
     return Container(
       padding: const EdgeInsets.only(top: 60, bottom: 30, left: 16, right: 16),

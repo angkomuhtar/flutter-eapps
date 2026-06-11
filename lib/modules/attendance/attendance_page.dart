@@ -133,113 +133,146 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
     }
   }
 
-  Future<void> _handleClockAction(String type) async {
+  void _showErrorDialog(String description, {String title = 'Kesalahan'}) {
+    AlertWidget.show(
+      context: context,
+      type: 'error',
+      title: title,
+      description: description,
+      okText: 'Oke',
+    );
+  }
+
+  void _showSuccessDialog(String description) {
+    AlertWidget.show(
+      context: context,
+      type: 'success',
+      title: 'Sukses',
+      description: description,
+      okText: 'Oke',
+    );
+  }
+
+  void _showFatalDialog(String description) {
+    AlertWidget.show(
+      context: context,
+      type: 'fatal',
+      title: 'Lokasi Tidak Valid',
+      description: description,
+      okText: 'Oke',
+    );
+  }
+
+  Future<bool?> _showConfirmDialog(String description) {
+    return AlertWidget.show(
+      context: context,
+      type: 'warning',
+      title: 'Konfirmasi',
+      description: description,
+      okText: 'Ya',
+      cancelText: 'Tidak',
+    );
+  }
+
+  void _handleDioError(DioException e, String type) {
+    String message = 'Terjadi kesalahan. Silakan coba lagi.';
+
+    if (e.response?.data != null && e.response!.data is Map) {
+      final errorData = e.response!.data as Map;
+      message = errorData['message'] ?? message;
+    }
+
+    _showErrorDialog('Gagal melakukan clock $type: $message');
+  }
+
+  Future<void> _handleClockAction({required String type, String? date}) async {
     await _getCurrentLocation();
 
     if (_currentPosition == null) {
-      AlertWidget.show(
-        context: context,
-        type: 'error',
-        title: 'Kesalahan',
-        description: 'Gagal mendapatkan lokasi saat ini.',
-        okText: 'Oke',
-      );
+      _showErrorDialog('Gagal mendapatkan lokasi saat ini.');
       return;
     }
 
     if (_selectedShift == null && type == 'in') {
-      AlertWidget.show(
-        context: context,
-        type: 'error',
-        title: 'Shift Belum Dipilih',
-        description: 'Silakan pilih shift terlebih dahulu.',
-        okText: 'Oke',
-      );
+      _showErrorDialog('Silakan pilih shift terlebih dahulu.');
+      return;
+    }
+
+    if (_selectedShift == null && type == 'in') {
+      _showErrorDialog('Silakan pilih shift terlebih dahulu.');
       return;
     }
 
     if (!_isWithinRadius) {
-      AlertWidget.show(
-        context: context,
-        type: 'error',
-        title: 'Diluar Area',
-        description:
-            'Anda berada diluar area yang diizinkan untuk melakukan clock.',
-        okText: 'Oke',
+      _showErrorDialog(
+        'Anda berada diluar area yang diizinkan untuk melakukan clock.',
       );
       return;
     }
 
     if (_isLocationSuspicious(_lastPosition!)) {
       if (kReleaseMode) {
-        AlertWidget.show(
-          context: context,
-          type: 'fatal',
-          title: 'Lokasi Tidak Valid',
-          description:
-              'Mock location terdeteksi. Pastikan GPS Anda asli atau hubungi administrator.',
-          okText: 'Oke',
+        _showFatalDialog(
+          'Lokasi tidak valid. Pastikan anda tidak menggunakan lokasi palsu atau hubungi administrator.',
         );
         return;
       }
     }
 
+    if (type == 'in') {
+      await _performClockIn();
+    } else {
+      await _performClockOut(date);
+    }
+  }
+
+  Future<void> _performClockIn() async {
     try {
-      if (type == 'in') {
-        await ref
-            .read(clockInOutProvider.notifier)
-            .clock_in_out(
-              date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-              type: type,
-              shift: _selectedShift!.id,
-              location: _locationId,
-            );
-        AlertWidget.show(
-          context: context,
-          type: 'success',
-          title: 'Sukses',
-          description: 'Berhasil melakukan clock $type.',
-          okText: 'Oke',
-        );
-      } else {
-        AlertWidget.show(
-          context: context,
-          type: 'warning',
-          title: 'Konfirmasi',
-          description: 'Apakah Anda yakin ingin melakukan clock out Sekarang?',
-          okText: 'Ya',
-          cancelText: 'Tidak',
-        ).then((confirmed) async {
-          if (confirmed == true) {
-            await ref
-                .read(clockInOutProvider.notifier)
-                .clock_in_out(
-                  date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                  type: type,
-                  shift: _selectedShiftId,
-                  location: _locationId,
-                );
-          }
-          ref.invalidate(todayAttendanceProvider);
-        });
-      }
-    } catch (e) {
-      if (e is DioException) {
-        final errorData = e.response?.data ?? e.message;
-        AlertWidget.show(
-          context: context,
-          type: 'error',
-          title: 'Kesalahan',
-          description:
-              'Gagal melakukan clock $type: ${errorData['message'] ?? 'Terjadi kesalahan. Silakan coba lagi.'}',
-          okText: 'Oke',
-        );
-      } else {
-        print('Clock $type error: $e');
-      }
-      print(e);
-    } finally {
+      await ref
+          .read(clockInOutProvider.notifier)
+          .clock_in_out(
+            date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+            type: 'in',
+            shift: _selectedShift!.id,
+            location: _locationId,
+          );
+
       ref.invalidate(todayAttendanceProvider);
+
+      _showSuccessDialog('Berhasil melakukan Absen Masuk.');
+    } on DioException catch (e) {
+      _handleDioError(e, 'in');
+    } catch (e) {
+      _showErrorDialog('Terjadi kesalahan. Silakan coba lagi.');
+    }
+  }
+
+  Future<void> _performClockOut(String? date) async {
+    final confirmed = await _showConfirmDialog(
+      'Apakah Anda yakin ingin melakukan clock out Sekarang?',
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    try {
+      await ref
+          .read(clockInOutProvider.notifier)
+          .clock_in_out(
+            date: date ?? DateFormat('yyyy-MM-dd').format(DateTime.now()),
+            type: 'out',
+            shift: _selectedShiftId,
+            location: _locationId,
+          );
+
+      ref.invalidate(todayAttendanceProvider);
+
+      _showSuccessDialog('Berhasil melakukan Absen Pulang.');
+    } on DioException catch (e) {
+      _handleDioError(e, 'out');
+    } catch (e) {
+      _showErrorDialog('Terjadi kesalahan. Silakan coba lagi.');
     }
   }
 
@@ -269,6 +302,7 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
     final hasClockIn = today?.check_in != null;
     final hasClockOut = today?.check_out != null;
 
+    debugPrint(today?.date);
     // debugPrint(
     //   'Today attendance: ${today?.shift?.name}, check_in: ${today?.check_in}, check_out: ${today?.check_out}',
     // );
@@ -300,7 +334,7 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                             myLocationButtonEnabled: false,
                             initialCameraPosition: CameraPosition(
                               target: _currentPosition ?? const LatLng(0, 0),
-                              zoom: 20,
+                              zoom: 19,
                             ),
                             onMapCreated: (GoogleMapController controller) {
                               mapController = controller;
@@ -570,7 +604,9 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                                               setState(() {
                                                 _absenceLoading = true;
                                               });
-                                              await _handleClockAction('in');
+                                              await _handleClockAction(
+                                                type: 'in',
+                                              );
                                             } finally {
                                               setState(() {
                                                 _absenceLoading = false;
@@ -601,12 +637,15 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: hasClockIn && !hasClockOut
-                                        ? () {
+                                        ? () async {
                                             try {
                                               setState(() {
                                                 _absenceLoading = true;
                                               });
-                                              _handleClockAction('out');
+                                              await _handleClockAction(
+                                                type: 'out',
+                                                date: today?.date,
+                                              );
                                             } finally {
                                               setState(() {
                                                 _absenceLoading = false;
