@@ -362,5 +362,193 @@ final userLoginDataProvider =
     );
 
 typedef _$UserLoginData = AutoDisposeAsyncNotifier<UserModel?>;
+String _$getVersionDataHash() => r'6a9c6a8448dcec318c987b1c8e1149e22f950eec';
+
+/// See also [GetVersionData].
+@ProviderFor(GetVersionData)
+final getVersionDataProvider =
+    AutoDisposeAsyncNotifierProvider<GetVersionData, VersionModel>.internal(
+      GetVersionData.new,
+      name: r'getVersionDataProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$getVersionDataHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$GetVersionData = AutoDisposeAsyncNotifier<VersionModel>;
+String _$getUnitListHash() => r'3de8eb573410a4696684fe9fc06ad06fc1ab2c07';
+
+abstract class _$GetUnitList
+    extends BuildlessAutoDisposeAsyncNotifier<List<UnitsModel>> {
+  late final String searchQuery;
+  late final int category;
+
+  FutureOr<List<UnitsModel>> build({
+    required String searchQuery,
+    int category = 0,
+  });
+}
+
+/// See also [GetUnitList].
+@ProviderFor(GetUnitList)
+const getUnitListProvider = GetUnitListFamily();
+
+/// See also [GetUnitList].
+class GetUnitListFamily extends Family<AsyncValue<List<UnitsModel>>> {
+  /// See also [GetUnitList].
+  const GetUnitListFamily();
+
+  /// See also [GetUnitList].
+  GetUnitListProvider call({required String searchQuery, int category = 0}) {
+    return GetUnitListProvider(searchQuery: searchQuery, category: category);
+  }
+
+  @override
+  GetUnitListProvider getProviderOverride(
+    covariant GetUnitListProvider provider,
+  ) {
+    return call(searchQuery: provider.searchQuery, category: provider.category);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getUnitListProvider';
+}
+
+/// See also [GetUnitList].
+class GetUnitListProvider
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<GetUnitList, List<UnitsModel>> {
+  /// See also [GetUnitList].
+  GetUnitListProvider({required String searchQuery, int category = 0})
+    : this._internal(
+        () => GetUnitList()
+          ..searchQuery = searchQuery
+          ..category = category,
+        from: getUnitListProvider,
+        name: r'getUnitListProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$getUnitListHash,
+        dependencies: GetUnitListFamily._dependencies,
+        allTransitiveDependencies: GetUnitListFamily._allTransitiveDependencies,
+        searchQuery: searchQuery,
+        category: category,
+      );
+
+  GetUnitListProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.searchQuery,
+    required this.category,
+  }) : super.internal();
+
+  final String searchQuery;
+  final int category;
+
+  @override
+  FutureOr<List<UnitsModel>> runNotifierBuild(covariant GetUnitList notifier) {
+    return notifier.build(searchQuery: searchQuery, category: category);
+  }
+
+  @override
+  Override overrideWith(GetUnitList Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: GetUnitListProvider._internal(
+        () => create()
+          ..searchQuery = searchQuery
+          ..category = category,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        searchQuery: searchQuery,
+        category: category,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<GetUnitList, List<UnitsModel>>
+  createElement() {
+    return _GetUnitListProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetUnitListProvider &&
+        other.searchQuery == searchQuery &&
+        other.category == category;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, searchQuery.hashCode);
+    hash = _SystemHash.combine(hash, category.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin GetUnitListRef on AutoDisposeAsyncNotifierProviderRef<List<UnitsModel>> {
+  /// The parameter `searchQuery` of this provider.
+  String get searchQuery;
+
+  /// The parameter `category` of this provider.
+  int get category;
+}
+
+class _GetUnitListProviderElement
+    extends
+        AutoDisposeAsyncNotifierProviderElement<GetUnitList, List<UnitsModel>>
+    with GetUnitListRef {
+  _GetUnitListProviderElement(super.provider);
+
+  @override
+  String get searchQuery => (origin as GetUnitListProvider).searchQuery;
+  @override
+  int get category => (origin as GetUnitListProvider).category;
+}
+
+String _$getUnitCategoryHash() => r'51908459347e89db329cfe283453a682db203022';
+
+/// See also [GetUnitCategory].
+@ProviderFor(GetUnitCategory)
+final getUnitCategoryProvider =
+    AutoDisposeAsyncNotifierProvider<
+      GetUnitCategory,
+      List<UnitCategoryModel>
+    >.internal(
+      GetUnitCategory.new,
+      name: r'getUnitCategoryProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$getUnitCategoryHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$GetUnitCategory = AutoDisposeAsyncNotifier<List<UnitCategoryModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

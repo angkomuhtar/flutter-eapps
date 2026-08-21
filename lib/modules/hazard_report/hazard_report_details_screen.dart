@@ -31,6 +31,7 @@ class _HazardReportDetailsScreenState
   File? selectedImage;
   final _searchController = TextEditingController();
   final _picController = TextEditingController();
+  bool isChangePic = false;
 
   @override
   Widget build(BuildContext context) {
@@ -270,6 +271,9 @@ class _HazardReportDetailsScreenState
                                   ),
                                 ],
                               ),
+                            ],
+
+                            if (data.action != null)
                               Text(
                                 'Penanggung Jawab',
                                 style: TextStyle(
@@ -277,22 +281,98 @@ class _HazardReportDetailsScreenState
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              ContBox(
-                                children: [
-                                  itemValue(
-                                    title: "Nama",
-                                    value: data.action?.pic?.name ?? '-',
+                            Stack(
+                              children: [
+                                ContBox(
+                                  children: [
+                                    itemValue(
+                                      title: "Nama",
+                                      value: data.action?.pic?.name ?? '-',
+                                    ),
+                                    itemValue(
+                                      title: "Jabatan",
+                                      value:
+                                          '${data.action?.pic?.dept ?? '-'} - ${data.action?.pic?.position ?? '-'}',
+                                    ),
+                                  ],
+                                ),
+                                Positioned(
+                                  top: 8,
+                                  right: 12,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isChangePic = !isChangePic;
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: Size(1, 1),
+                                      backgroundColor: AppColors.white,
+                                      shadowColor: AppColors.black.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                        horizontal: 8,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        side: BorderSide(
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                    child: isChangePic
+                                        ? Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const [
+                                              Icon(
+                                                Icons.close,
+                                                size: 14,
+                                                color: AppColors.primary,
+                                              ),
+                                              Gap(4),
+                                              Text(
+                                                'Batalkan',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: const [
+                                              Icon(
+                                                Icons.autorenew_sharp,
+                                                size: 14,
+                                                color: AppColors.primary,
+                                              ),
+                                              Gap(4),
+                                              Text(
+                                                'Ganti PIC',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                   ),
-                                  itemValue(
-                                    title: "Jabatan",
-                                    value:
-                                        '${data.action?.pic?.dept ?? '-'} - ${data.action?.pic?.position ?? '-'}',
-                                  ),
-                                ],
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
 
-                            if (data.status == "OPEN") ...[
+                            if (data.status == "OPEN" || isChangePic) ...[
                               Text(
                                 'Pilih PIC',
                                 style: TextStyle(
@@ -511,7 +591,6 @@ class _HazardReportDetailsScreenState
                                   ],
                                 ),
                               ),
-                              Gap(14),
                             ],
 
                             if (data.status == "CLOSED") ...[
@@ -546,16 +625,18 @@ class _HazardReportDetailsScreenState
                                     title: "Catatan Penanganan",
                                     value: data.action?.notes ?? '-',
                                   ),
-                                  itemValue(
-                                    title: "Foto Penanganan",
-                                    child: ImageViewer(
-                                      imageUrl: data.action?.image ?? '',
-                                    ),
-                                  ),
+                                  data.action?.image != null
+                                      ? itemValue(
+                                          title: "Foto Penanganan",
+                                          child: ImageViewer(
+                                            imageUrl: data.action?.image ?? '',
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
                                 ],
                               ),
-                              Gap(14),
                             ],
+                            Gap(14),
                           ],
                         ),
                       ),

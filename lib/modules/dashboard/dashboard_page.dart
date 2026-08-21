@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
+import 'package:flutter_eapps/core/utils/app.dart';
 import 'package:flutter_eapps/core/utils/options_provider.dart';
 import 'package:flutter_eapps/modules/dashboard/dashboard_repository.dart';
 import 'package:flutter_eapps/modules/dashboard/widget/profile_widget.dart';
@@ -8,13 +9,38 @@ import 'package:flutter_eapps/modules/dashboard/widget/today_attendance.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class DashboardPage extends ConsumerWidget {
+class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends ConsumerState<DashboardPage> {
+  String _currVersion = '';
+  String _currBuild = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPackageInfo();
+  }
+
+  Future<void> _loadPackageInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _currVersion = packageInfo.version;
+      _currBuild = packageInfo.buildNumber;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(userLoginDataProvider).valueOrNull;
+    final version = ref.watch(getVersionDataProvider);
+
     double reportWidth = MediaQuery.of(context).size.width - (16 * 7);
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -69,6 +95,148 @@ class DashboardPage extends ConsumerWidget {
                           ),
                         ],
                       ),
+                    ),
+
+                    version.when(
+                      data: (ver) {
+                        if (checkVersion(
+                          _currVersion,
+                          ver.version,
+                          _currBuild,
+                          ver.build_number,
+                        )) {
+                          return Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
+                            margin: EdgeInsets.only(bottom: 15),
+                            decoration: BoxDecoration(
+                              color: AppColors.accent,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.black.withValues(
+                                    alpha: 0.10,
+                                  ),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Softwre Update',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                Text(
+                                  'Applikasi terbaru v${ver.version}(${ver.build_number}) tersedia, silahkan perbaharui applikasi anda',
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: null,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.30,
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 4,
+                                      horizontal: 16,
+                                    ),
+                                    margin: EdgeInsets.only(top: 12),
+                                    child: Text(
+                                      'Update',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      },
+                      loading: () => const Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage: AssetImage(
+                              'assets/images/avatar-default.png',
+                            ),
+                            backgroundColor: AppColors.white,
+                          ),
+                          Gap(12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 200,
+                                height: 16,
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(4),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Gap(6),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: 80,
+                                    height: 12,
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(4),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Gap(8),
+                                  SizedBox(
+                                    width: 80,
+                                    height: 12,
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(4),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      error: (e, __) {
+                        print(e);
+                        return Text('Error loading user data');
+                      },
                     ),
                     TodayAttendanceWidget(),
                     Gap(20),
@@ -136,6 +304,13 @@ class DashboardPage extends ConsumerWidget {
                                       context.push('/inspection-report'),
                                     },
                                     width: reportWidth * 0.25,
+                                  ),
+                                  FeatureButton(
+                                    title: "Laporan P2H",
+                                    icon: "assets/features/p2h.png",
+                                    onTap: () => {
+                                      context.push('/approval-p2h'),
+                                    },
                                   ),
                                 ],
                               ),
@@ -228,14 +403,14 @@ class AllFeatureWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     FeatureButton(
-                      title: "Daily Activity",
+                      title: "Plant Daily Activity",
                       icon: "assets/features/daily-activity.png",
                       onTap: () => {context.push('/daily-activity')},
                     ),
                     FeatureButton(
                       title: "P2H",
                       icon: "assets/features/p2h.png",
-                      onTap: () => {print("P2H")},
+                      onTap: () => {context.push('/p2h')},
                     ),
                   ],
                 ),

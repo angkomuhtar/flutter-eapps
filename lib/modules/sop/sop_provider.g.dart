@@ -6,7 +6,7 @@ part of 'sop_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$listSopHash() => r'a06140caac6d58dce2e38dc882c1e5288a63f60f';
+String _$listSopHash() => r'f5b7f8d6cd8a0d0e1aa4e346f97aa077a01ae33f';
 
 /// See also [ListSop].
 @ProviderFor(ListSop)

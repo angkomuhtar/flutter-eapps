@@ -81,9 +81,7 @@ class _SopDetailsScreenState extends ConsumerState<SopDetailsScreen> {
                 data: (data) {
                   if (data.isEmpty) {
                     return Center(
-                      child: EmptyList(
-                        message: 'Belum ada kontrak kerja yang tersedia',
-                      ),
+                      child: EmptyList(message: 'Belum ada file yang tersedia'),
                     );
                   }
                   return Stack(

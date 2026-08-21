@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
 
 class InputText extends StatelessWidget {
@@ -19,12 +20,14 @@ class InputText extends StatelessWidget {
   final String? initialValue;
   final bool autofocus;
   final void Function(String?)? onChanged;
+  final List<TextInputFormatter>? inputFormatters;
 
   const InputText({
     super.key,
     this.controller,
     required this.labelText,
     this.keyboardType,
+    this.inputFormatters,
     this.prefixIcon,
     this.validator,
     this.onSaved,
@@ -46,6 +49,7 @@ class InputText extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       obscureText: obscureText,
       maxLines: maxLines,
       minLines: minLines,

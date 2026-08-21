@@ -1,32 +1,58 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
 import 'package:flutter_eapps/core/dio/dio_provider.dart';
-import 'package:flutter_eapps/core/models/contract_model.dart';
+import 'package:flutter_eapps/core/models/appr_p2h_model.dart';
 import 'package:flutter_eapps/core/utils/app.dart';
-import 'package:flutter_eapps/core/utils/options_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'pkwt_provider.g.dart';
+part 'appr_p2h_provider.g.dart';
+
+// @riverpod
+// class ListApprP2h extends _$ListApprP2h {
+//   late Dio _dio;
+
+//   @override
+//   Future<List<P2hHeader>> build(String id_unit) async {
+//     _dio = ref.read(dioProvider(ApiType.p2h));
+//     return _fetch();
+//   }
+
+//   Future<List<P2hHeader>> _fetch() async {
+//     try {
+//       final res = await _dio.get('approval-form-masters');
+//       final List data = res.data['data'];
+//       // print(data);
+//       final items = data.map((e) {
+//         // print(e);
+//         return P2hHeader.fromJson(e);
+//       }).toList();
+//       print('Fetched PIC list: ${items.length} items');
+//       return items;
+//     } catch (e) {
+//       debugPrint('Error fetching PIC details: $e');
+//       throw Exception('Failed to load PIC details: $e');
+//     }
+//   }
+// }
 
 @riverpod
-class ListContract extends _$ListContract {
+class ListApprP2h extends _$ListApprP2h {
   late Dio _dio;
 
   int _page = 1;
   String _filter = "";
   bool _hasMore = true;
-  final List<ContractModel> _items = [];
+  final List<ApprP2hModel> _items = [];
 
   @override
-  Future<List<ContractModel>> build() async {
-    _dio = ref.read(dioProvider(ApiType.ePkwt));
-
+  Future<List<ApprP2hModel>> build({String filter = ""}) async {
+    _dio = ref.read(dioProvider(ApiType.p2h));
+    _filter = filter;
     return _fetch(reset: true);
   }
 
-  Future<List<ContractModel>> _fetch({bool reset = false}) async {
-    final user = ref.read(userLoginDataProvider).valueOrNull;
+  Future<List<ApprP2hModel>> _fetch({bool reset = false}) async {
     if (reset) {
       _page = 1;
       _hasMore = true;
@@ -36,8 +62,8 @@ class ListContract extends _$ListContract {
     if (!_hasMore) return _items;
     try {
       final res = await _dio.get(
-        '/list-contracts',
-        queryParameters: {'page': _page, 'user_id': user?.id},
+        '/approval-form-masters',
+        queryParameters: {'page': _page},
       );
 
       final data = res.data['data'];
@@ -45,8 +71,8 @@ class ListContract extends _$ListContract {
       final List list = data['data'];
 
       final newItems = list.map((e) {
-        print(e);
-        return ContractModel.fromJson(e);
+        debugPrint('Fetched P2H approval item: $e.approvals');
+        return ApprP2hModel.fromJson(e);
       }).toList();
 
       _items.addAll(newItems);
@@ -57,10 +83,9 @@ class ListContract extends _$ListContract {
       _hasMore = currentPage < lastPage;
 
       if (_hasMore) _page++;
-
       return _items;
     } catch (e) {
-      debugPrint('Error fetching kontrak: $e');
+      debugPrint('Error fetching P2H approvals: $e');
       rethrow;
     }
   }
@@ -74,8 +99,6 @@ class ListContract extends _$ListContract {
   }
 
   bool get hasMore => _hasMore;
-  String get filter => _filter;
-
   Future<void> refresh() async {
     state = const AsyncLoading();
 
@@ -83,27 +106,21 @@ class ListContract extends _$ListContract {
       return await _fetch(reset: true);
     });
   }
-
-  Future<void> setFilter(String filter) async {
-    _filter = filter;
-    await refresh();
-  }
 }
 
 @riverpod
-class SignedContract extends _$SignedContract {
-  late Dio _dio;
+class VerifyP2h extends _$VerifyP2h {
+  late final Dio _dio;
 
   @override
   FutureOr<void> build() {
-    _dio = ref.read(dioProvider(ApiType.ePkwt));
+    _dio = ref.read(dioProvider(ApiType.p2h));
   }
 
-  Future<(bool, String?)> sign(Map<String, dynamic> data) async {
+  Future<(bool, String?)> upload(Map<String, dynamic> data) async {
     try {
-      await _dio.post('/signed-contracts', data: data);
-
-      ref.read(listContractProvider.notifier).refresh();
+      final form_id = data['id'];
+      await _dio.post('/approval-form-masters/${form_id}/verify', data: data);
       return (true, null);
     } catch (e) {
       String errorMessage = 'Terjadi kesalahan';
@@ -114,26 +131,5 @@ class SignedContract extends _$SignedContract {
       }
       return (false, errorMessage);
     }
-  }
-}
-
-@riverpod
-class LatestContract extends _$LatestContract {
-  late Dio _dio;
-  @override
-  Future<ContractModel?> build() async {
-    _dio = ref.read(dioProvider(ApiType.ePkwt));
-    return _fetch();
-  }
-
-  Future<ContractModel?> _fetch() async {
-    final user = ref.read(userLoginDataProvider).valueOrNull;
-    final res = await _dio.get(
-      '/latest-contracts',
-      queryParameters: {'user_id': user?.id},
-    );
-    final data = res.data['data'];
-    if (data == null) return null;
-    return ContractModel.fromJson(data);
   }
 }

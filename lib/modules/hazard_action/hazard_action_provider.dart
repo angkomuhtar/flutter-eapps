@@ -91,23 +91,35 @@ class UpdateAction extends _$UpdateAction {
 
   Future<(bool, String?)> upload(Map<String, dynamic> data) async {
     try {
-      final image = data['action_attachment'] as File;
-      final fileName = image.path.split('/').last;
-      final formData = FormData.fromMap({
-        ...data,
-        'action_attachment': await MultipartFile.fromFile(
-          image.path,
-          filename: fileName,
-        ),
-      });
+      final formData;
+      if (data['action_attachment'] != null) {
+        final image = data['action_attachment'] as File;
+        final fileName = image.path.split('/').last;
+        formData = FormData.fromMap({
+          ...data,
+          'action_attachment': await MultipartFile.fromFile(
+            image.path,
+            filename: fileName,
+          ),
+        });
+      } else {
+        formData = FormData.fromMap({
+          'id_action': data['id_action'],
+          'action_note': data['action_note'],
+          'action_status': data['action_status'],
+        });
+      }
 
+      debugPrint('test data : $data');
       await _dio.post('/hazard/action', data: formData);
 
       ref.read(listHazardActionProvider().notifier).refresh();
       return (true, null);
     } catch (e) {
+      debugPrint('error: $e');
       String errorMessage = 'Terjadi kesalahan';
       if (e is DioException) {
+        debugPrint(e.response.toString());
         final statusCode = e.response?.statusCode;
         debugPrint('DioException: ${e.response}, Status code: $statusCode');
         errorMessage = getErrorMessage(statusCode ?? 0);
@@ -131,8 +143,6 @@ class DetailHazardAction extends _$DetailHazardAction {
     try {
       final res = await _dio.get('/hazard/$id');
       final data = res.data['data'];
-
-      debugPrint('Fetched hazard details: ${data['hazard_action']}');
       final item = HazardModel.fromJson(data);
       return item;
     } catch (e) {

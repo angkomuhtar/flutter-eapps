@@ -173,7 +173,7 @@ class _ListHazardActionProviderElement
   String get filter => (origin as ListHazardActionProvider).filter;
 }
 
-String _$updateActionHash() => r'62e358d7c421adc3bb9a87f55305ac8786000fc7';
+String _$updateActionHash() => r'9c6d382c098248a923417de67cee23882d0d2d5b';
 
 /// See also [UpdateAction].
 @ProviderFor(UpdateAction)
@@ -190,7 +190,7 @@ final updateActionProvider =
 
 typedef _$UpdateAction = AutoDisposeAsyncNotifier<void>;
 String _$detailHazardActionHash() =>
-    r'79985b46f9b02bf9b07e860667c89ce4764b146e';
+    r'1bfccef0334d3810ff275aa7ebc92b347d403509';
 
 abstract class _$DetailHazardAction
     extends BuildlessAutoDisposeAsyncNotifier<HazardModel> {

@@ -17,6 +17,7 @@ class ProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   String appVersion = '';
+  String buildVersion = '';
 
   @override
   void initState() {
@@ -26,8 +27,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Future<void> _loadPackageInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
+    print(packageInfo.version);
     setState(() {
       appVersion = packageInfo.version;
+      buildVersion = packageInfo.buildNumber;
     });
   }
 
@@ -76,7 +79,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
               ),
               Text(
-                'v$appVersion',
+                'v$appVersion($buildVersion)',
                 style: TextStyle(
                   color: AppColors.white,
                   fontSize: 12,

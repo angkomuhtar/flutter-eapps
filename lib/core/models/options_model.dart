@@ -51,3 +51,29 @@ class DepartementModel {
     );
   }
 }
+
+class VersionModel {
+  final int id;
+  final String version;
+  final String build_number;
+  final String device;
+  final String url;
+
+  VersionModel({
+    required this.id,
+    required this.version,
+    required this.build_number,
+    required this.device,
+    required this.url,
+  });
+
+  factory VersionModel.fromJson(Map<String, dynamic> json) {
+    return VersionModel(
+      id: json['id'],
+      version: json['version'],
+      build_number: json['build_number'] ?? '0',
+      device: json['device'],
+      url: json['download'],
+    );
+  }
+}

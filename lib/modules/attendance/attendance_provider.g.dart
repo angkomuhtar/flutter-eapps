@@ -54,7 +54,7 @@ final listShiftProvider =
     );
 
 typedef _$ListShift = AutoDisposeAsyncNotifier<List<Shift>>;
-String _$clockInOutHash() => r'398e3497cd7f04ac2254da38fca7ea1b59e29121';
+String _$clockInOutHash() => r'6a5524c56b448022e983c2254634704b229e8458';
 
 /// See also [ClockInOut].
 @ProviderFor(ClockInOut)

@@ -30,9 +30,11 @@ class HazardActionDetailsScreen extends ConsumerStatefulWidget {
 class _HazardActionDetailsScreenState
     extends ConsumerState<HazardActionDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _photoFieldKey = GlobalKey<FormFieldState<File>>();
   Map<String, String>? _selectedCategory;
   Map<String, dynamic> _formData = {};
   File? selectedImage;
+  String? selectedStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +75,13 @@ class _HazardActionDetailsScreenState
       _formKey.currentState!.save();
 
       LoadingWidget.show(context, message: 'Menyimpan laporan bahaya...');
-      debugPrint('Form data to submit: $_formData');
-      // return;
 
       final (success, errorMessage) = await ref
           .read(updateActionProvider.notifier)
           .upload(_formData);
 
+      // debugPrint('Form data to submit: $_formData - $errorMessage - $success');
+      // return;
       if (!mounted) return;
 
       LoadingWidget.hide(context);
@@ -324,10 +326,11 @@ class _HazardActionDetailsScreenState
                                         errorText: 'Pilih salah satu',
                                       ),
                                       onChanged: (value) {
-                                        debugPrint(value.toString());
                                         setState(() {
                                           _selectedCategory = value;
+                                          selectedStatus = value?['value'];
                                         });
+                                        _photoFieldKey.currentState?.validate();
                                       },
                                       onSaved: (val) {
                                         _formData['action_status'] =
@@ -338,8 +341,10 @@ class _HazardActionDetailsScreenState
                                     ),
 
                                     FormField<File>(
+                                      key: _photoFieldKey,
                                       validator: (value) {
-                                        if (selectedImage == null) {
+                                        if (selectedImage == null &&
+                                            selectedStatus == 'DONE') {
                                           return 'Foto harus diisi';
                                         }
                                         return null;
@@ -482,7 +487,8 @@ class _HazardActionDetailsScreenState
                                                       ),
                                               ),
                                             ),
-                                            if (state.hasError)
+                                            if (state.hasError &&
+                                                selectedStatus == 'DONE')
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                   left: 12,
@@ -565,12 +571,14 @@ class _HazardActionDetailsScreenState
                                     title: "Catatan Penanganan",
                                     value: data.action?.notes ?? '-',
                                   ),
-                                  itemValue(
-                                    title: "Foto Penanganan",
-                                    child: ImageViewer(
-                                      imageUrl: data.action?.image ?? '',
-                                    ),
-                                  ),
+                                  data.action?.image != null
+                                      ? itemValue(
+                                          title: "Foto Penanganan",
+                                          child: ImageViewer(
+                                            imageUrl: data.action?.image ?? '',
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
                                 ],
                               ),
                             Gap(14),

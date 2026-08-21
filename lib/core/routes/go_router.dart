@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_eapps/core/models/appr_p2h_model.dart';
 import 'package:flutter_eapps/core/models/contract_model.dart';
 import 'package:flutter_eapps/modules/attendance/attendance_history_screen.dart';
 import 'package:flutter_eapps/modules/attendance/attendance_page.dart';
@@ -20,6 +21,9 @@ import 'package:flutter_eapps/modules/inspection_report/inspection_report_page.d
 import 'package:flutter_eapps/modules/leave/leave_details_screen.dart';
 import 'package:flutter_eapps/modules/leave/leave_page.dart';
 import 'package:flutter_eapps/modules/notification/notification_page.dart';
+import 'package:flutter_eapps/modules/p2h/p2h_page.dart';
+import 'package:flutter_eapps/modules/p2h_approvals/appr_p2h_details_screen.dart';
+import 'package:flutter_eapps/modules/p2h_approvals/appr_p2h_page.dart';
 import 'package:flutter_eapps/modules/pkwt/pkwt_details_screen.dart';
 import 'package:flutter_eapps/modules/pkwt/pkwt_page.dart';
 import 'package:flutter_eapps/modules/profile/presentation/about_us_page.dart';
@@ -227,6 +231,24 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/daily-activity',
         name: 'daily-activity',
         builder: (context, state) => const DailyActivityPage(),
+      ),
+      GoRoute(
+        path: '/p2h',
+        name: 'p2h',
+        builder: (context, state) => const P2hPage(),
+      ),
+      GoRoute(
+        path: '/approval-p2h',
+        name: 'approval-p2h',
+        builder: (context, state) => const ApprP2hPage(),
+      ),
+      GoRoute(
+        path: '/approval-p2h/details',
+        name: 'approval-p2h-details',
+        builder: (context, state) {
+          final item = state.extra as ApprP2hModel;
+          return ApprP2hDetailsScreen(item: item);
+        },
       ),
     ],
     errorBuilder: (context, state) =>

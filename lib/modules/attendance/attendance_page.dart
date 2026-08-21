@@ -8,6 +8,7 @@ import 'package:flutter_eapps/core/models/clock_today_model.dart';
 import 'package:flutter_eapps/core/models/radius_model.dart';
 import 'package:flutter_eapps/modules/attendance/attendance_provider.dart';
 import 'package:flutter_eapps/modules/dashboard/dashboard_repository.dart';
+import 'package:flutter_eapps/modules/pkwt/pkwt_provider.dart';
 import 'package:flutter_eapps/widget/alert-widget.dart';
 import 'package:flutter_eapps/widget/dropdown-widget.dart';
 import 'package:flutter_eapps/widget/loading-widget.dart';
@@ -124,9 +125,10 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
       setState(() {
         _currentPosition = LatLng(position.latitude, position.longitude);
         _lastPosition = position;
-        _isLoading = false;
       });
     } catch (e) {
+      print('Error getting location: $e');
+    } finally {
       setState(() {
         _isLoading = false;
       });
@@ -181,7 +183,6 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
       final errorData = e.response!.data as Map;
       message = errorData['message'] ?? message;
     }
-
     _showErrorDialog('Gagal melakukan clock $type: $message');
   }
 
@@ -281,6 +282,7 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
     final todayAsync = ref.watch(todayAttendanceProvider);
     final radiusAsync = ref.watch(allowedRadiusProvider);
     final shiftAsync = ref.watch(listShiftProvider);
+    final latestContract = ref.watch(latestContractProvider).valueOrNull;
 
     final radiusList = radiusAsync.valueOrNull ?? [];
     if (_currentPosition != null && radiusList.isNotEmpty) {
@@ -302,7 +304,6 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
     final hasClockIn = today?.check_in != null;
     final hasClockOut = today?.check_out != null;
 
-    debugPrint(today?.date);
     // debugPrint(
     //   'Today attendance: ${today?.shift?.name}, check_in: ${today?.check_in}, check_out: ${today?.check_out}',
     // );
@@ -453,230 +454,282 @@ class _AttendancePageState extends ConsumerState<AttendancePage> {
                       child: SafeArea(
                         top: false,
                         bottom: true,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            today?.check_in != null
-                                ? Column(
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                        child:
+                            latestContract != null &&
+                                latestContract.status == 'expired'
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                      'assets/lottie/warning.json',
+                                      width: 150,
+                                      height: 150,
+                                      repeat: true,
+                                    ),
+                                    Text(
+                                      'Kontrak anda kadaluwarsa, silahkan perbaharui kontrak atau hubungi HR',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Gap(12),
+                                  ],
+                                ),
+                              )
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  today?.check_in != null
+                                      ? Column(
                                           children: [
-                                            Text(
-                                              'Shift',
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.grey,
+                                            Container(
+                                              width: double.infinity,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Shift',
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${today!.shift?.name} (${DateFormat('HH:mm').format(DateFormat('HH:mm:ss').parse(today.shift!.start))} - ${DateFormat('HH:mm').format(DateFormat('HH:mm:ss').parse(today.shift!.end))})',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: AppColors.black,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            Text(
-                                              '${today!.shift?.name} (${DateFormat('HH:mm').format(DateFormat('HH:mm:ss').parse(today.shift!.start))} - ${DateFormat('HH:mm').format(DateFormat('HH:mm:ss').parse(today.shift!.end))})',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: AppColors.black,
-                                                fontWeight: FontWeight.w700,
-                                              ),
+                                            Gap(12),
+                                            Row(
+                                              spacing: 22,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 8,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.white,
+                                                      border: BoxBorder.all(
+                                                        color:
+                                                            AppColors.success,
+                                                        width: 0.5,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            8,
+                                                          ),
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Masuk',
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                        ),
+                                                        Text(
+                                                          '${DateFormat('HH:mm a').format(DateTime.parse(today.check_in!))}',
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 22,
+                                                                color: AppColors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 8,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.white,
+                                                      border: BoxBorder.all(
+                                                        color:
+                                                            AppColors.success,
+                                                        width: 0.5,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            8,
+                                                          ),
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Pulang',
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                        ),
+                                                        Text(
+                                                          today.check_out !=
+                                                                  null
+                                                              ? '${DateFormat('HH:mm a').format(DateTime.parse(today.check_out!))}'
+                                                              : '--:-- --',
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 22,
+                                                                color: AppColors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
+                                        )
+                                      : DropdownWidget<Shift>(
+                                          labelText: 'Pilih Shift',
+                                          value: _selectedShift,
+                                          items: shiftList,
+                                          itemLabel: (shift) =>
+                                              '${shift.name} (${shift.start} - ${shift.end})',
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _selectedShift = value;
+                                            });
+                                          },
+                                        ),
+                                  const Gap(12),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: hasClockIn
+                                              ? null
+                                              : () async {
+                                                  try {
+                                                    setState(() {
+                                                      _absenceLoading = true;
+                                                    });
+                                                    await _handleClockAction(
+                                                      type: 'in',
+                                                    );
+                                                  } finally {
+                                                    setState(() {
+                                                      _absenceLoading = false;
+                                                    });
+                                                  }
+                                                },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: AppColors.success,
+                                            disabledBackgroundColor:
+                                                AppColors.grey,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 8,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'MASUK',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.white,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      Gap(12),
-                                      Row(
-                                        spacing: 22,
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 8,
-                                                  ),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.white,
-                                                border: BoxBorder.all(
-                                                  color: AppColors.success,
-                                                  width: 0.5,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    'Masuk',
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '${DateFormat('HH:mm a').format(DateTime.parse(today.check_in!))}',
-                                                    style: const TextStyle(
-                                                      fontSize: 22,
-                                                      color: AppColors.black,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                      const Gap(12),
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: hasClockIn && !hasClockOut
+                                              ? () async {
+                                                  try {
+                                                    setState(() {
+                                                      _absenceLoading = true;
+                                                    });
+                                                    await _handleClockAction(
+                                                      type: 'out',
+                                                      date: today?.date,
+                                                    );
+                                                  } finally {
+                                                    setState(() {
+                                                      _absenceLoading = false;
+                                                    });
+                                                  }
+                                                }
+                                              : null,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: AppColors.primary,
+                                            disabledBackgroundColor:
+                                                AppColors.grey,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 8,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
                                           ),
-                                          Expanded(
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 8,
-                                                  ),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.white,
-                                                border: BoxBorder.all(
-                                                  color: AppColors.success,
-                                                  width: 0.5,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    'Pulang',
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    today.check_out != null
-                                                        ? '${DateFormat('HH:mm a').format(DateTime.parse(today.check_out!))}'
-                                                        : '--:-- --',
-                                                    style: const TextStyle(
-                                                      fontSize: 22,
-                                                      color: AppColors.black,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                          child: Text(
+                                            'PULANG',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.white,
                                             ),
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ],
-                                  )
-                                : DropdownWidget<Shift>(
-                                    labelText: 'Pilih Shift',
-                                    value: _selectedShift,
-                                    items: shiftList,
-                                    itemLabel: (shift) =>
-                                        '${shift.name} (${shift.start} - ${shift.end})',
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _selectedShift = value;
-                                      });
-                                    },
                                   ),
-                            const Gap(12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: hasClockIn
-                                        ? null
-                                        : () async {
-                                            try {
-                                              setState(() {
-                                                _absenceLoading = true;
-                                              });
-                                              await _handleClockAction(
-                                                type: 'in',
-                                              );
-                                            } finally {
-                                              setState(() {
-                                                _absenceLoading = false;
-                                              });
-                                            }
-                                          },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.success,
-                                      disabledBackgroundColor: AppColors.grey,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 8,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'MASUK',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Gap(12),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: hasClockIn && !hasClockOut
-                                        ? () async {
-                                            try {
-                                              setState(() {
-                                                _absenceLoading = true;
-                                              });
-                                              await _handleClockAction(
-                                                type: 'out',
-                                                date: today?.date,
-                                              );
-                                            } finally {
-                                              setState(() {
-                                                _absenceLoading = false;
-                                              });
-                                            }
-                                          }
-                                        : null,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primary,
-                                      disabledBackgroundColor: AppColors.grey,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 8,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'PULANG',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                ],
+                              ),
                       ),
                     ),
                   ],

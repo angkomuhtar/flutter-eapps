@@ -1,7 +1,12 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+String getTimeDuration(DateTime start, DateTime end) {
+  final duration = end.difference(start);
+  return '${NumberFormat('00').format(duration.inHours)}:${NumberFormat('00').format(duration.inMinutes.remainder(60))}';
+}
 
 String getSleepDuration(DateTime start, DateTime end) {
   final duration = end.difference(start);
@@ -51,4 +56,33 @@ Future<bool> requestStoragePermission() async {
     }
   }
   return true;
+}
+
+bool checkVersion(
+  String currVer,
+  String availVer,
+  String curBuild,
+  String availBuild,
+) {
+  int currApp = int.parse(currVer.replaceAll(".", "")) + int.parse(curBuild);
+  int availApp =
+      int.parse(availVer.replaceAll(".", "")) + int.parse(availBuild);
+
+  if (currApp < availApp) {
+    return true;
+  }
+  return false;
+}
+
+String unitStatus(String? code) {
+  switch (code) {
+    case 'RFU':
+      return 'Ready';
+    case 'BD':
+      return 'Breakdown';
+    case 'STB':
+      return 'Standby';
+    default:
+      return '-';
+  }
 }

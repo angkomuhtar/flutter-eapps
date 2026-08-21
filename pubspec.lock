@@ -350,6 +350,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_datetime_picker_plus:
+    dependency: "direct main"
+    description:
+      name: flutter_datetime_picker_plus
+      sha256: f8f15209dc6a2597bd4749afa8b05b13d9fa953e6fbf843a93f59e9d12e4a631
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
   flutter_form_builder:
     dependency: "direct main"
     description:

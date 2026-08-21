@@ -13,8 +13,10 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  late final TabController _tabController;
 
   final List<Widget> _pages = const [
     DashboardPage(),
@@ -23,11 +25,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _pages.length, vsync: this);
+    _tabController.addListener(() {
+      setState(() => _selectedIndex = _tabController.index);
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       body: Container(
-        child: IndexedStack(index: _selectedIndex, children: _pages),
+        // child: IndexedStack(index: _selectedIndex, children: _pages),
+        child: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: _tabController,
+          children: _pages,
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(bottom: 10),
@@ -76,6 +98,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     selectedIndex: _selectedIndex,
                     onTabChange: (index) {
                       setState(() => _selectedIndex = index);
+                      _tabController.animateTo(index);
                     },
                     tabs: const [
                       GButton(icon: Icons.home, text: 'Home'),

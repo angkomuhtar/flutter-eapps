@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
 import 'package:flutter_eapps/modules/daily_activity/add_daily_activity_screen.dart';
-import 'package:flutter_eapps/modules/hazard/hazard_history_screen.dart';
+import 'package:flutter_eapps/modules/daily_activity/daily_activity_history_screen.dart';
 import 'package:flutter_eapps/widget/appbar-widget.dart';
 import 'package:flutter_eapps/widget/cust-tabbar-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +24,7 @@ class _DailyActivityPageState extends ConsumerState<DailyActivityPage>
 
   final List<Widget> _tabs = const [
     AddDailyActivityScreen(),
-    HazardHistoryScreen(),
+    DailyActivityHistoryScreen(),
   ];
 
   @override

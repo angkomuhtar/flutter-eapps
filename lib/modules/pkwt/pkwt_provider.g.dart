@@ -6,7 +6,7 @@ part of 'pkwt_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$listContractHash() => r'3ca0e28eb73c831812418507fde5bbdecba281d2';
+String _$listContractHash() => r'2ff2365f8904acd5ae1c3130d37b8afddff759b3';
 
 /// See also [ListContract].
 @ProviderFor(ListContract)
@@ -41,5 +41,21 @@ final signedContractProvider =
     );
 
 typedef _$SignedContract = AutoDisposeAsyncNotifier<void>;
+String _$latestContractHash() => r'42c22502540cf6ee5f6f4af6f799e3489e88894f';
+
+/// See also [LatestContract].
+@ProviderFor(LatestContract)
+final latestContractProvider =
+    AutoDisposeAsyncNotifierProvider<LatestContract, ContractModel?>.internal(
+      LatestContract.new,
+      name: r'latestContractProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$latestContractHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$LatestContract = AutoDisposeAsyncNotifier<ContractModel?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

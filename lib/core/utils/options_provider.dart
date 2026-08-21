@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/dio/dio_factory.dart';
 import 'package:flutter_eapps/core/dio/dio_provider.dart';
 import 'package:flutter_eapps/core/models/options_model.dart';
+import 'package:flutter_eapps/core/models/units_model.dart';
 import 'package:flutter_eapps/core/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -106,5 +110,102 @@ class UserLoginData extends _$UserLoginData {
     final data = res.data['user'];
     if (data == null) return null;
     return UserModel.fromJson(data);
+  }
+}
+
+@riverpod
+class GetVersionData extends _$GetVersionData {
+  late Dio _dio;
+  @override
+  Future<VersionModel> build() async {
+    _dio = ref.read(dioProvider(ApiType.empapps));
+    return _fetch();
+  }
+
+  Future<VersionModel> _fetch() async {
+    try {
+      final res = await _dio.get(
+        '/version',
+        queryParameters: {'device': Platform.isAndroid ? 'ANDROID' : 'IOS'},
+      );
+      print(res.data['data']);
+      final data = res.data['data'];
+      return VersionModel.fromJson(data);
+    } catch (e) {
+      debugPrint('Error fetching VERSION: $e');
+      throw Exception('Failed to LOAD VERSION: $e');
+    }
+  }
+}
+
+@riverpod
+class GetUnitList extends _$GetUnitList {
+  late Dio _dio;
+
+  @override
+  Future<List<UnitsModel>> build({
+    required String searchQuery,
+    int category = 0,
+  }) async {
+    _dio = ref.read(dioProvider(ApiType.p2h));
+    return _fetch(
+      query: searchQuery,
+      category: category == 0 ? '' : category.toString(),
+    );
+  }
+
+  Future<List<UnitsModel>> _fetch({
+    required String query,
+    required String category,
+  }) async {
+    try {
+      final res = await _dio.get(
+        'units',
+        queryParameters: {'query': query, 'category': category},
+      );
+      final List data = res.data['data'];
+      // print(data);
+      final items = data.map((e) {
+        print('err :');
+        print(e);
+
+        return UnitsModel.fromJson(e);
+      }).toList();
+      print('Fetched PIC list: ${items.length} items');
+      return items;
+    } catch (e) {
+      debugPrint('Error fetching PIC details: $e');
+      throw Exception('Failed to load PIC details: $e');
+    }
+  }
+}
+
+@riverpod
+class GetUnitCategory extends _$GetUnitCategory {
+  late Dio _dio;
+
+  @override
+  Future<List<UnitCategoryModel>> build() async {
+    _dio = ref.read(dioProvider(ApiType.p2h));
+    return _fetch();
+  }
+
+  Future<List<UnitCategoryModel>> _fetch() async {
+    try {
+      final res = await _dio.get('units/category');
+      final List data = res.data['data'];
+      // print(data);
+      final items = data.map((e) {
+        print('err :');
+        print(e);
+
+        return UnitCategoryModel.fromJson(e);
+      }).toList();
+      print('Fetched PIC list: ${items.length} items');
+      return items;
+    } catch (e) {
+      debugPrint('Error fetching category: $e');
+      throw Exception('Failed to load category: $e');
+    }
   }
 }

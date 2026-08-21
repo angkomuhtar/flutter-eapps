@@ -6,7 +6,9 @@ import 'package:flutter_eapps/widget/appbar-widget.dart';
 import 'package:flutter_eapps/widget/cust-tabbar-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final hazardTabControllerProvider = StateProvider<TabController?>((ref) => null);
+final hazardTabControllerProvider = StateProvider<TabController?>(
+  (ref) => null,
+);
 
 class HazardPage extends ConsumerStatefulWidget {
   const HazardPage({super.key});
@@ -29,7 +31,7 @@ class _HazardPage extends ConsumerState<HazardPage>
     _tabController.addListener(() {
       setState(() => _selectedIndex = _tabController.index);
     });
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(hazardTabControllerProvider.notifier).state = _tabController;
     });
