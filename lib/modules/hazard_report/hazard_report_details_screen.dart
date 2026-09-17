@@ -88,6 +88,7 @@ class _HazardReportDetailsScreenState
             Expanded(
               child: detailAsync.when(
                 data: (data) {
+                  debugPrint('Detail data: ${data.action}');
                   return RefreshIndicator(
                     onRefresh: () async {
                       ref.invalidate(detailHazardReportProvider(id: widget.id));
@@ -272,8 +273,7 @@ class _HazardReportDetailsScreenState
                                 ],
                               ),
                             ],
-
-                            if (data.action != null)
+                            if (data.action != null) ...[
                               Text(
                                 'Penanggung Jawab',
                                 style: TextStyle(
@@ -281,96 +281,99 @@ class _HazardReportDetailsScreenState
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            Stack(
-                              children: [
-                                ContBox(
-                                  children: [
-                                    itemValue(
-                                      title: "Nama",
-                                      value: data.action?.pic?.name ?? '-',
-                                    ),
-                                    itemValue(
-                                      title: "Jabatan",
-                                      value:
-                                          '${data.action?.pic?.dept ?? '-'} - ${data.action?.pic?.position ?? '-'}',
-                                    ),
-                                  ],
-                                ),
-                                Positioned(
-                                  top: 8,
-                                  right: 12,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        isChangePic = !isChangePic;
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      minimumSize: Size(1, 1),
-                                      backgroundColor: AppColors.white,
-                                      shadowColor: AppColors.black.withValues(
-                                        alpha: 0.5,
+                              Stack(
+                                children: [
+                                  ContBox(
+                                    children: [
+                                      itemValue(
+                                        title: "Nama",
+                                        value: data.action?.pic?.name ?? '-',
                                       ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 4,
-                                        horizontal: 8,
+                                      itemValue(
+                                        title: "Jabatan",
+                                        value:
+                                            '${data.action?.pic?.dept ?? '-'} - ${data.action?.pic?.position ?? '-'}',
                                       ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                        side: BorderSide(
-                                          color: AppColors.primary,
+                                    ],
+                                  ),
+                                  Positioned(
+                                    top: 8,
+                                    right: 12,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isChangePic = !isChangePic;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(1, 1),
+                                        backgroundColor: AppColors.white,
+                                        shadowColor: AppColors.black.withValues(
+                                          alpha: 0.5,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4,
+                                          horizontal: 8,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                          side: BorderSide(
+                                            color: AppColors.primary,
+                                          ),
                                         ),
                                       ),
+                                      child: isChangePic
+                                          ? Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const [
+                                                Icon(
+                                                  Icons.close,
+                                                  size: 14,
+                                                  color: AppColors.primary,
+                                                ),
+                                                Gap(4),
+                                                Text(
+                                                  'Batalkan',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const [
+                                                Icon(
+                                                  Icons.autorenew_sharp,
+                                                  size: 14,
+                                                  color: AppColors.primary,
+                                                ),
+                                                Gap(4),
+                                                Text(
+                                                  'Ganti PIC',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                     ),
-                                    child: isChangePic
-                                        ? Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Icon(
-                                                Icons.close,
-                                                size: 14,
-                                                color: AppColors.primary,
-                                              ),
-                                              Gap(4),
-                                              Text(
-                                                'Batalkan',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.primary,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Icon(
-                                                Icons.autorenew_sharp,
-                                                size: 14,
-                                                color: AppColors.primary,
-                                              ),
-                                              Gap(4),
-                                              Text(
-                                                'Ganti PIC',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.primary,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                            ],
 
                             if (data.status == "OPEN" || isChangePic) ...[
                               Text(
@@ -535,7 +538,6 @@ class _HazardReportDetailsScreenState
                                             );
                                           },
                                         ).then((value) {
-                                          print(value);
                                           if (value != null) {
                                             setState(() {
                                               _formData['pic'] = value['id'];

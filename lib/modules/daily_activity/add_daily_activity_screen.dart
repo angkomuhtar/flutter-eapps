@@ -556,7 +556,7 @@ class _AddDailyActivityScreenState
                       ),
                     ),
                     child: const Text(
-                      'Laporkan Bahaya',
+                      'Simpan Aktivitas',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,

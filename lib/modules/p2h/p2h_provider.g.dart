@@ -6,7 +6,7 @@ part of 'p2h_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getP2hInspectionHash() => r'a576b7d73993bb22607d0a0dab1bbe4a930df5b2';
+String _$getP2hInspectionHash() => r'6ecbfb00dcc842426f43e0966b603f8bd5f4777b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -186,5 +186,168 @@ final submitP2hProvider =
     );
 
 typedef _$SubmitP2h = AutoDisposeAsyncNotifier<void>;
+String _$historyP2hHash() => r'8b9c4c5aa29658e0d100b7921b5b7ee0ae1cf833';
+
+abstract class _$HistoryP2h
+    extends BuildlessAutoDisposeAsyncNotifier<List<P2hModel>> {
+  late final String filter;
+
+  FutureOr<List<P2hModel>> build({String filter = ""});
+}
+
+/// See also [HistoryP2h].
+@ProviderFor(HistoryP2h)
+const historyP2hProvider = HistoryP2hFamily();
+
+/// See also [HistoryP2h].
+class HistoryP2hFamily extends Family<AsyncValue<List<P2hModel>>> {
+  /// See also [HistoryP2h].
+  const HistoryP2hFamily();
+
+  /// See also [HistoryP2h].
+  HistoryP2hProvider call({String filter = ""}) {
+    return HistoryP2hProvider(filter: filter);
+  }
+
+  @override
+  HistoryP2hProvider getProviderOverride(
+    covariant HistoryP2hProvider provider,
+  ) {
+    return call(filter: provider.filter);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'historyP2hProvider';
+}
+
+/// See also [HistoryP2h].
+class HistoryP2hProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<HistoryP2h, List<P2hModel>> {
+  /// See also [HistoryP2h].
+  HistoryP2hProvider({String filter = ""})
+    : this._internal(
+        () => HistoryP2h()..filter = filter,
+        from: historyP2hProvider,
+        name: r'historyP2hProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$historyP2hHash,
+        dependencies: HistoryP2hFamily._dependencies,
+        allTransitiveDependencies: HistoryP2hFamily._allTransitiveDependencies,
+        filter: filter,
+      );
+
+  HistoryP2hProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.filter,
+  }) : super.internal();
+
+  final String filter;
+
+  @override
+  FutureOr<List<P2hModel>> runNotifierBuild(covariant HistoryP2h notifier) {
+    return notifier.build(filter: filter);
+  }
+
+  @override
+  Override overrideWith(HistoryP2h Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: HistoryP2hProvider._internal(
+        () => create()..filter = filter,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        filter: filter,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<HistoryP2h, List<P2hModel>>
+  createElement() {
+    return _HistoryP2hProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is HistoryP2hProvider && other.filter == filter;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, filter.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin HistoryP2hRef on AutoDisposeAsyncNotifierProviderRef<List<P2hModel>> {
+  /// The parameter `filter` of this provider.
+  String get filter;
+}
+
+class _HistoryP2hProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<HistoryP2h, List<P2hModel>>
+    with HistoryP2hRef {
+  _HistoryP2hProviderElement(super.provider);
+
+  @override
+  String get filter => (origin as HistoryP2hProvider).filter;
+}
+
+String _$closeP2hHash() => r'db8eef0151b16e2e5e61faf17c9d1814dc12054e';
+
+/// See also [CloseP2h].
+@ProviderFor(CloseP2h)
+final closeP2hProvider =
+    AutoDisposeAsyncNotifierProvider<CloseP2h, void>.internal(
+      CloseP2h.new,
+      name: r'closeP2hProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$closeP2hHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$CloseP2h = AutoDisposeAsyncNotifier<void>;
+String _$myP2hFormHash() => r'423f02cc427af869f985c6d7526600bfbf39681a';
+
+/// See also [MyP2hForm].
+@ProviderFor(MyP2hForm)
+final myP2hFormProvider =
+    AutoDisposeAsyncNotifierProvider<MyP2hForm, String?>.internal(
+      MyP2hForm.new,
+      name: r'myP2hFormProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$myP2hFormHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$MyP2hForm = AutoDisposeAsyncNotifier<String?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

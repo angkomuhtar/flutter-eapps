@@ -21,6 +21,7 @@ import 'package:flutter_eapps/modules/inspection_report/inspection_report_page.d
 import 'package:flutter_eapps/modules/leave/leave_details_screen.dart';
 import 'package:flutter_eapps/modules/leave/leave_page.dart';
 import 'package:flutter_eapps/modules/notification/notification_page.dart';
+import 'package:flutter_eapps/modules/p2h/p2h_details_screen.dart';
 import 'package:flutter_eapps/modules/p2h/p2h_page.dart';
 import 'package:flutter_eapps/modules/p2h_approvals/appr_p2h_details_screen.dart';
 import 'package:flutter_eapps/modules/p2h_approvals/appr_p2h_page.dart';
@@ -236,6 +237,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/p2h',
         name: 'p2h',
         builder: (context, state) => const P2hPage(),
+      ),
+      GoRoute(
+        path: '/p2h/details',
+        name: 'p2h-details',
+        builder: (context, state) {
+          final item = state.extra as P2hModel;
+          return P2hDetailsScreen(item: item);
+        },
       ),
       GoRoute(
         path: '/approval-p2h',

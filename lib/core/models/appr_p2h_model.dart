@@ -197,7 +197,7 @@ class Approval {
   }
 }
 
-class ApprP2hModel {
+class P2hModel {
   final int id;
   final String date;
   final String hm_start;
@@ -207,13 +207,11 @@ class ApprP2hModel {
   final String activity_start_time;
   final String status;
   final String notes;
-  final User user;
   final Unit unit;
   final Shift shift;
-  final List<FormMaster> form_masters;
   final List<Approval>? approvals;
 
-  ApprP2hModel({
+  P2hModel({
     required this.id,
     required this.date,
     required this.hm_start,
@@ -223,11 +221,52 @@ class ApprP2hModel {
     required this.activity_start_time,
     required this.status,
     required this.notes,
-    required this.user,
     required this.unit,
     required this.shift,
-    required this.form_masters,
     this.approvals,
+  });
+
+  factory P2hModel.fromJson(Map<String, dynamic> json) {
+    return P2hModel(
+      id: json['id'],
+      date: json['date'],
+      hm_start: json['hm_start'],
+      hm_end: json['hm_end'],
+      sleep_duration: json['sleep_duration'],
+      operator_condition: json['operator_condition'],
+      activity_start_time: json['activity_start_time'],
+      status: json['status'],
+      notes: json['notes'] ?? '',
+      unit: Unit.fromJson(json['unit']),
+      shift: Shift.fromJson(json['work_shift']),
+      approvals: json['approvals'] != null
+          ? (json['approvals'] as List<dynamic>)
+                .map((e) => Approval.fromJson(e))
+                .toList()
+          : null,
+    );
+  }
+}
+
+class ApprP2hModel extends P2hModel {
+  final List<FormMaster> form_masters;
+  final User user;
+
+  ApprP2hModel({
+    required this.form_masters,
+    required this.user,
+    required super.id,
+    required super.date,
+    required super.hm_start,
+    required super.hm_end,
+    required super.sleep_duration,
+    required super.operator_condition,
+    required super.activity_start_time,
+    required super.status,
+    required super.notes,
+    required super.unit,
+    required super.shift,
+    super.approvals,
   });
 
   factory ApprP2hModel.fromJson(Map<String, dynamic> json) {

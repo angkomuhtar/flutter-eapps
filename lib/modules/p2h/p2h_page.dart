@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_eapps/core/constants/app_colors.dart';
 import 'package:flutter_eapps/modules/p2h/add_p2h_screen.dart';
+import 'package:flutter_eapps/modules/p2h/history_p2h_screen.dart';
 import 'package:flutter_eapps/widget/appbar-widget.dart';
 import 'package:flutter_eapps/widget/cust-tabbar-widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +20,7 @@ class _P2hPageState extends ConsumerState<P2hPage>
   int _selectedIndex = 0;
   late final TabController _tabController;
 
-  final List<Widget> _tabs = const [AddP2hScreen()];
+  final List<Widget> _tabs = const [AddP2hScreen(), HistoryP2hScreen()];
 
   @override
   void initState() {
@@ -49,25 +50,25 @@ class _P2hPageState extends ConsumerState<P2hPage>
         child: Column(
           children: [
             CustAppBar(title: 'Laporan Pemeriksaan '),
-            // CustTabBar(
-            //   selectedIndex: _selectedIndex,
-            //   tabs: [
-            //     Tabs(
-            //       text: 'Buat Baru',
-            //       icon: Icons.difference_rounded,
-            //       onTap: () {
-            //         _tabController.animateTo(0);
-            //       },
-            //     ),
-            //     Tabs(
-            //       text: 'Riwayat',
-            //       icon: Icons.history,
-            //       onTap: () {
-            //         _tabController.animateTo(1);
-            //       },
-            //     ),
-            //   ],
-            // ),
+            CustTabBar(
+              selectedIndex: _selectedIndex,
+              tabs: [
+                Tabs(
+                  text: 'Buat Baru',
+                  icon: Icons.difference_rounded,
+                  onTap: () {
+                    _tabController.animateTo(0);
+                  },
+                ),
+                Tabs(
+                  text: 'Riwayat',
+                  icon: Icons.history,
+                  onTap: () {
+                    _tabController.animateTo(1);
+                  },
+                ),
+              ],
+            ),
             Expanded(
               child: TabBarView(controller: _tabController, children: _tabs),
             ),

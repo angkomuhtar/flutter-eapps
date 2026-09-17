@@ -8,34 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'appr_p2h_provider.g.dart';
 
-// @riverpod
-// class ListApprP2h extends _$ListApprP2h {
-//   late Dio _dio;
-
-//   @override
-//   Future<List<P2hHeader>> build(String id_unit) async {
-//     _dio = ref.read(dioProvider(ApiType.p2h));
-//     return _fetch();
-//   }
-
-//   Future<List<P2hHeader>> _fetch() async {
-//     try {
-//       final res = await _dio.get('approval-form-masters');
-//       final List data = res.data['data'];
-//       // print(data);
-//       final items = data.map((e) {
-//         // print(e);
-//         return P2hHeader.fromJson(e);
-//       }).toList();
-//       print('Fetched PIC list: ${items.length} items');
-//       return items;
-//     } catch (e) {
-//       debugPrint('Error fetching PIC details: $e');
-//       throw Exception('Failed to load PIC details: $e');
-//     }
-//   }
-// }
-
 @riverpod
 class ListApprP2h extends _$ListApprP2h {
   late Dio _dio;
